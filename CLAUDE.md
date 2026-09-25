@@ -1,63 +1,78 @@
-# chatinhas â€” contexto do projeto
+# chatinhas — contexto do projeto
 
-Blog de avaliaÃ§Ã£o de coisas, feito por duas amigas (CecÃ­lia e uma amiga) que **nÃ£o sÃ£o da Ã¡rea de tecnologia**.
-Explique tudo em portuguÃªs simples, sem jargÃ£o, e sempre diga como ver o resultado (`npm run dev` â†’ http://localhost:4321).
+Blog de avaliação de coisas, feito por duas amigas (Cecília e uma amiga) que **não são da área de tecnologia**.
+Explique tudo em português simples, sem jargão, e sempre diga como ver o resultado (`npm run dev` → http://localhost:4321).
 
-"chatinhas" Ã© o nome provisÃ³rio (chat + ser chatinha pra avaliar). O repositÃ³rio no GitHub se chama `cecigonca/bloggers`.
+"chatinhas" é o nome provisório (chat + ser chatinha pra avaliar). O repositório no GitHub se chama `cecigonca/bloggers`.
+O trabalho está na branch `v0` (a `main` ainda só tem o README original).
 
 ## Conceito e tom de voz
 
-- Ideia central: **"do grupo do zap pro blog"**. Tudo que elas jÃ¡ julgavam no grupo, agora em pÃºblico, porque todo mundo merece saber o que presta.
-- Linguagem descontraÃ­da e jovem, de amigas para amigos: "a gente", "pra", "tÃ¡", humor e um pouco de exagero. Nada de tom de revista formal.
-- Textos da interface tambÃ©m seguem esse tom, em minÃºsculas quando for um detalhe ("feed", "leia tambÃ©m", "veredito final").
-- **Fugir do "brega"** (feedback da CecÃ­lia na v1): nada de frase de marketing, nada que tente demais,
-  nada de gÃ­ria millennial ("grupo do zap" â†’ "wpp"). Menos texto explicando. Escrever como mensagem de verdade
+- Ideia central: **"do wpp pro blog"**. Tudo que elas já julgavam no grupo, agora em público, porque todo mundo merece saber o que presta.
+- Linguagem descontraída e jovem, de amigas para amigos: "a gente", "pra", "tá", "vc". Nada de tom de revista formal.
+- **Fugir do "brega"** (feedback repetido da Cecília): nada de frase de marketing, nada que tente demais,
+  nada de gíria millennial ("grupo do zap" → "wpp"). Menos texto explicando. Escrever como mensagem de verdade
   (ex.: "mano sim... achei horrivel", "SERIO?", "KKKKKKK"). Nada inclinado/torto tipo adesivo.
-- Nota sempre com a escala visÃ­vel: "4/5 Â· aprovado" (sÃ³ "nota 4" deixa a pessoa sem saber de quanto Ã©).
+  Ela rejeitou: legenda das notas em formato de chat, botão "ver julgamentos", "A gente é chata. Com carinho.".
+- Títulos e cabeçalhos com a primeira letra maiúscula ("É isso mesmo, a gente julga tudo.", "Leia também").
+  Minúscula só em detalhes pequenos (links do menu, nome da categoria na capa do card).
+- Nota sempre como número + estrela + nome: "4★ · aprovado" (componentes `Veredito.astro` e `Estrela.astro`).
+  Vale pro site inteiro: cards, post, legenda, "Sobre nós" e opções do admin.
 
 ## Visual
 
-- Vibe: moderna, minimalista, simples, mas descontraÃ­da e cool.
-- Paleta: cinzas, cinza azulado e azul-marinho. Tokens em `src/styles/global.css` (`--marinho`, `--azul-cinza`, `--azul-cinza-claro`, `--cinza`, `--cinza-claro`, `--fundo`). NÃ£o introduzir outras cores sem combinar com elas.
-- Fontes (Google Fonts): **Bricolage Grotesque** nos tÃ­tulos, **DM Sans** no texto.
-- Elementos marcantes: balÃµes de conversa (chat do hero, logo, aba selecionada, "fofoca em uma frase" nos cards), cards com cantos bem arredondados.
-- Abas de tÃ³picos: em minÃºscula, a selecionada vira um balÃ£o de chat, grudadas no topo ao rolar. (A referÃªncia inicial era um menu em caixa alta entre duas linhas; mudamos para ter identidade prÃ³pria.)
-- Legenda das notas (src/components/LegendaNotas.astro, um <dialog>): régua de 1 a 5 com número grande, nome e frase curta; no celular vira lista. Abre pelo link "nossas notas →" ao lado do botão "ver posts" e pelo selo na página do post (qualquer elemento com `data-abrir-legenda`). NÃO colocar na faixa de abas e NÃO fazer em formato de chat (a Cecília achou brega).
-- Feed em mosaico: 4 formatos (grande, largo, alto, pequeno) e 4 cores num padrÃ£o que se repete (`src/lib/feed.ts`), recalculado ao filtrar. Card com foto = foto ocupando tudo; sem foto = resumo num balÃ£o de chat.
+- Vibe: moderna, minimalista, simples, mas descontraída e cool.
+- Paleta: cinzas, cinza azulado e azul-marinho. Tokens em `src/styles/global.css` (`--marinho`, `--marinho-claro`,
+  `--azul-cinza`, `--azul-cinza-claro`, `--cinza`, `--cinza-claro`, `--fundo`).
+  Única exceção: `--dourado`, usado **só na nota 5** (selo, estrela e régua da legenda). Não introduzir outras cores sem combinar com elas.
+- Fontes (Google Fonts): **Bricolage Grotesque** nos títulos, **DM Sans** no texto.
+- Elementos marcantes: balões de conversa (chat do topo da home, logo, "..." nas capas dos cards), cards com cantos bem arredondados.
+- Abas de tópicos: faixa entre duas linhas, em CAIXA ALTA, a selecionada em pílula marinho, grudadas no topo ao rolar
+  (a Cecília preferiu esse modelo ao de balão). Nada além das abas nessa faixa.
+- Feed em mosaico (`src/lib/feed.ts`): 4 formatos (grande, largo, alto, pequeno) e 3 cores num padrão de 18 posts que se repete,
+  recalculado ao filtrar. Os grandes aparecem em colunas diferentes (nada de "grande à esquerda e diminuindo").
+  Card no modelo da v0: capa colorida com o nome da categoria + "..." (ou foto), selo da nota na borda da capa, texto embaixo.
+  No largo, capa à esquerda.
+- Legenda das notas (`src/components/LegendaNotas.astro`, um `<dialog>`): régua de 1★ a 5★ com número grande, estrela, nome e frase curta;
+  no celular vira lista. Abre pelo link "nossas notas →" ao lado do botão "ver posts" e pelo selo na página do post
+  (qualquer elemento com `data-abrir-legenda`). NÃO colocar na faixa de abas e NÃO fazer em formato de chat.
 
-## DecisÃµes tÃ©cnicas
+## Decisões técnicas
 
-- **Site:** Astro 7 (site estÃ¡tico).
-- **Admin / formulÃ¡rio:** Keystatic em `/keystatic`. FormulÃ¡rios em `keystatic.config.ts`.
-- **Listas compartilhadas** (categorias, vereditos 1â€“5, autoras): `src/lib/rotulos.ts`. SÃ£o usadas pelo admin e pelo site.
+- **Site:** Astro 7 (site estático).
+- **Admin / formulário:** Keystatic em `/keystatic`. Formulários em `keystatic.config.ts`.
+- **Listas compartilhadas** (categorias, vereditos 1–5, autoras): `src/lib/rotulos.ts`. São usadas pelo admin e pelo site.
 - **Posts:** arquivos `.mdoc` (Markdoc) em `src/content/posts/`, lidos via `src/content.config.ts`.
-  Ao mudar um campo no Keystatic, mude tambÃ©m o schema em `src/content.config.ts` e ajuste os posts existentes.
-  TÃ­tulos com ":" no frontmatter precisam de aspas (o Keystatic jÃ¡ faz isso sozinho).
-- **PÃ¡gina "Sobre nÃ³s":** editÃ¡vel pelo admin (singleton `sobre`), salva em `src/data/sobre.yaml`, lida com o reader do Keystatic.
+  Ao mudar um campo no Keystatic, mude também o schema em `src/content.config.ts` e ajuste os posts existentes.
+  Títulos com ":" no frontmatter precisam de aspas (o Keystatic já faz isso sozinho).
+- **Página "Sobre nós":** editável pelo admin (singleton `sobre`), salva em `src/data/sobre.yaml`, lida com o reader do Keystatic.
 - **Imagens:** `public/images/posts/` e `public/images/sobre/`.
-- **Filtro por tÃ³pico na home:** feito no navegador (JS em `src/pages/index.astro`) e guardado no link como `?topico=...`.
-- **Hospedagem planejada:** Vercel (adapter `@astrojs/vercel` jÃ¡ instalado).
+- **Filtro por tópico na home:** feito no navegador (JS em `src/pages/index.astro`) e guardado no link como `?topico=...`.
+- **Hospedagem planejada:** Vercel (adapter `@astrojs/vercel` já instalado).
 - **Storage do Keystatic:** `local` por enquanto. Na etapa de ir pro ar, trocar para `github` (repo `cecigonca/bloggers`) e configurar o GitHub App do Keystatic.
-- Evitar `backdrop-filter` no topo fixo: dava problema de renderizaÃ§Ã£o ao rolar a pÃ¡gina.
+- Evitar `backdrop-filter` no topo fixo: dava problema de renderização ao rolar a página.
+- Depois de mudar CSS de componente, se o navegador mostrar a página sem estilo, reiniciar o `npm run dev` (o servidor às vezes fica desatualizado).
+- No Windows PowerShell 5.1, ler arquivos com `[IO.File]::ReadAllText` (UTF-8), nunca com `Get-Content -Raw` sem `-Encoding UTF8`: corrompe os acentos.
 
-## PendÃªncias com elas
+## Pendências com elas
 
 - Nome real da amiga (trocar "Amiga" em `src/lib/rotulos.ts` e em `src/data/sobre.yaml`).
-- TÃ³picos definitivos das abas (os atuais sÃ£o provisÃ³rios).
-- Textos reais do "Sobre nÃ³s" e fotos.
+- Tópicos definitivos das abas (os atuais são provisórios).
+- Textos reais do "Sobre nós" e fotos.
 - Confirmar o nome "chatinhas".
-- Os 6 posts atuais sÃ£o exemplos (tag `exemplo`) e devem ser apagados antes de lanÃ§ar.
+- Os 6 posts atuais são exemplos (tag `exemplo`) e devem ser apagados antes de lançar.
+- Com poucos posts sobra um buraco no fim do mosaico (dá para esticar o último card, se elas quiserem).
 
 ## Plano
 
-1. âœ… Base: projeto rodando local, formulÃ¡rio funcionando.
-2. âœ… Visual v1: paleta, fontes, home com hero, abas e feed, pÃ¡gina de post, "Sobre nÃ³s", formulÃ¡rio com textos explicativos.
-3. âœ… v1: textos menos bregas, chat novo, abas prÃ³prias, feed em mosaico, selos retos.
-4. â³ Ajustes finos com elas (tÃ³picos, textos, nome, fotos).
-4. â³ No ar: Vercel + Keystatic em modo GitHub + acesso para as duas + domÃ­nio.
-5. â³ Extras: busca, comentÃ¡rios, compartilhar no WhatsApp, newsletter.
+1. ✅ Base: projeto rodando local, formulário funcionando.
+2. ✅ Visual v1: paleta, fontes, home com topo, abas e feed, página de post, "Sobre nós", formulário com textos explicativos.
+3. ✅ v1.x: textos menos bregas, chat novo, feed em mosaico com cards da v0, legenda das notas em régua, nota com estrela, 5★ dourado.
+4. ⏳ Ajustes finos com elas (tópicos, textos, nome, fotos).
+5. ⏳ No ar: Vercel + Keystatic em modo GitHub + acesso para as duas + domínio.
+6. ⏳ Extras: busca, comentários, compartilhar no WhatsApp, newsletter.
 
-## ConvenÃ§Ãµes
+## Convenções
 
-- Nomes de arquivos, variÃ¡veis e comentÃ¡rios em portuguÃªs.
-- Salvar cada etapa com commit no GitHub, para poder voltar atrÃ¡s.
+- Nomes de arquivos, variáveis e comentários em português.
+- Salvar cada etapa com commit no GitHub, para poder voltar atrás.

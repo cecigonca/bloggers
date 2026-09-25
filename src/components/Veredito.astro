@@ -9,7 +9,7 @@ interface Props {
 
 const { nota } = Astro.props;
 const { label } = veredito(nota);
-const tom = nota >= 4 ? 'alto' : nota === 3 ? 'medio' : 'baixo';
+const tom = nota === 5 ? 'ouro' : nota === 4 ? 'alto' : nota === 3 ? 'medio' : 'baixo';
 ---
 
 <span class:list={['selo', tom]} aria-label={`Nota ${nota} de 5: ${label}`}>
@@ -26,6 +26,7 @@ const tom = nota >= 4 ? 'alto' : nota === 3 ? 'medio' : 'baixo';
     white-space: nowrap;
   }
   strong { display: inline-flex; align-items: center; gap: 2px; }
+  .ouro { background: var(--dourado); color: var(--marinho); }
   .alto { background: var(--marinho); color: var(--branco); }
   .medio { background: var(--azul-cinza); color: var(--branco); }
   .baixo { background: var(--branco); color: var(--marinho); box-shadow: inset 0 0 0 1.5px var(--marinho); }

@@ -8,6 +8,8 @@
   --cinza-claro: #e3e6eb;
   --fundo: #f2f3f5;
   --branco: #ffffff;
+  /* Única cor fora da paleta: só para a nota 5. */
+  --dourado: #e2b33c;
 
   --texto: var(--marinho);
   --texto-suave: var(--azul-cinza);
