@@ -191,6 +191,9 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
     scrollbar-width: none;
   }
   .abas::-webkit-scrollbar { display: none; }
+  /* Centraliza as abas; quando não couberem (celular), rolam pro lado sem cortar a primeira. */
+  .abas > :first-child { margin-left: auto; }
+  .abas > :last-child { margin-right: auto; }
   .abas button {
     flex: none;
     font: inherit;
