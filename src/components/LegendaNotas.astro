@@ -15,7 +15,12 @@ const escala = [...notas].sort((a, b) => Number(a.value) - Number(b.value));
       {escala.map((n) => (
         <li class={`degrau nota-${n.value}`}>
           <span class="barra" aria-hidden="true"></span>
-          <span class="numero">{n.value}</span>
+          <span class="numero" aria-label={`${n.value} estrela${n.value === '1' ? '' : 's'}`}>
+            {n.value}
+            <svg class="estrela" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" fill="currentColor" />
+            </svg>
+          </span>
           <span class="textos">
             <strong>{n.label.toLowerCase()}</strong>
             <span class="frase">{n.descricao}</span>
@@ -95,7 +100,11 @@ const escala = [...notas].sort((a, b) => Number(a.value) - Number(b.value));
     line-height: 1;
     letter-spacing: -0.04em;
     margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
+  .estrela { width: 0.5em; height: 0.5em; flex: none; }
   .textos { display: flex; flex-direction: column; gap: 4px; padding-right: 8px; }
   strong { font-size: 1.05rem; font-weight: 700; }
   .frase { font-size: 0.92rem; line-height: 1.35; color: var(--texto-suave); }
@@ -107,7 +116,7 @@ const escala = [...notas].sort((a, b) => Number(a.value) - Number(b.value));
     .regua { grid-template-columns: 1fr; gap: 16px; }
     .degrau { flex-direction: row; align-items: center; gap: 14px; }
     .barra { width: 6px; height: auto; align-self: stretch; }
-    .numero { font-size: 2.6rem; margin: 0; width: 1.2ch; }
+    .numero { font-size: 2.6rem; margin: 0; width: 2.2ch; gap: 4px; }
   }
 
   @keyframes surgir { from { opacity: 0; transform: translateY(12px); } }
