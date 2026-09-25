@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import Veredito from '../../components/Veredito.astro';
 import Estrela from '../../components/Estrela.astro';
 import CardPost from '../../components/CardPost.astro';
+import Logo from '../../components/Logo.astro';
 import { categorias, autoras, rotulo, veredito, dataLonga } from '../../lib/rotulos';
 import { corDoCard } from '../../lib/feed';
 
@@ -42,7 +43,7 @@ const relacionados = todos
       <h1>{titulo}</h1>
       {resumo && <p class="lead">{resumo}</p>}
       <div class="meta">
-        <span class="avatar" aria-hidden="true">{nomeAutora.charAt(0)}</span>
+        <span class="avatar" aria-hidden="true">{autora === 'chatinhas' ? <Logo /> : nomeAutora.charAt(0)}</span>
         <span>por <strong>{nomeAutora}</strong><br /><span class="data">{dataLonga(data)}</span></span>
         <button type="button" class="meta-selo" data-abrir-legenda title="O que é cada nota?"><Veredito nota={nota} /><span class="interrogacao" aria-hidden="true">?</span></button>
       </div>
@@ -99,6 +100,7 @@ const relacionados = todos
   .lead { font-size: 1.3rem; line-height: 1.45; color: var(--texto-suave); margin: 0 0 28px; }
 
   .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; line-height: 1.3; }
+  .avatar :global(svg) { width: 24px; height: 24px; }
   .avatar {
     width: 44px; height: 44px; border-radius: 50%;
     display: grid; place-items: center;

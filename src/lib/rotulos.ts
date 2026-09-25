@@ -25,6 +25,7 @@ export const notas = [
 export const autoras = [
   { value: 'cecilia', label: 'Cecília' },
   { value: 'amiga', label: 'Amiga' },
+  { value: 'chatinhas', label: 'chatinhas' },
 ];
 
 type Opcao = { value: string; label: string };
