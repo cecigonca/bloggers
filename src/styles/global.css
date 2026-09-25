@@ -1,0 +1,87 @@
+/* Paleta, fontes e estilos básicos do site inteiro. */
+:root {
+  --marinho: #14213d;
+  --marinho-claro: #24365e;
+  --azul-cinza: #5c6f8a;
+  --azul-cinza-claro: #c7d0dd;
+  --cinza: #8b929c;
+  --cinza-claro: #e3e6eb;
+  --fundo: #f2f3f5;
+  --branco: #ffffff;
+
+  --texto: var(--marinho);
+  --texto-suave: var(--azul-cinza);
+  --borda: #d9dde3;
+
+  --fonte-titulo: 'Bricolage Grotesque', system-ui, sans-serif;
+  --fonte-texto: 'DM Sans', system-ui, sans-serif;
+
+  --raio: 18px;
+}
+
+* { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte-texto);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+h1, h2, h3 {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+::selection { background: var(--marinho); color: var(--branco); }
+
+.container { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
+.container-estreito { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+
+/* Textinho pequeno em caixa alta que vai acima de títulos. */
+.sobrancelha {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--azul-cinza);
+  margin: 0;
+}
+
+/* Grade de cards de post (feed e "mais julgamentos"). */
+.grade {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  gap: 24px;
+}
+@media (max-width: 900px) { .grade { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .grade { grid-template-columns: minmax(0, 1fr); } }
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--marinho);
+  color: var(--branco);
+  text-decoration: none;
+  font-weight: 700;
+  padding: 12px 22px;
+  border-radius: 999px;
+  transition: transform 0.15s, background 0.15s;
+}
+.botao:hover { background: var(--marinho-claro); transform: translateY(-1px); }

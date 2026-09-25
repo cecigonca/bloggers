@@ -1,0 +1,83 @@
+---
+// Moldura comum a todas as páginas: topo, conteúdo e rodapé.
+import '../styles/global.css';
+import Logo from '../components/Logo.astro';
+
+interface Props {
+  titulo?: string;
+  descricao?: string;
+}
+
+const { titulo, descricao = 'Tudo que a gente julgava no grupo, agora em público. Porque todo mundo merece saber o que presta.' } = Astro.props;
+const tituloPagina = titulo ? `${titulo} · chatinhas` : 'chatinhas · a gente julga tudo';
+const caminho = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={descricao} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{tituloPagina}</title>
+  </head>
+  <body>
+    <header class="topo">
+      <div class="container topo-conteudo">
+        <a href="/" class="logo"><Logo /> chatinhas</a>
+        <nav>
+          <a href="/" aria-current={caminho === '/' ? 'page' : undefined}>feed</a>
+          <a href="/sobre" aria-current={caminho.startsWith('/sobre') ? 'page' : undefined}>sobre nós</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="rodape">
+      <div class="container rodape-conteudo">
+        <a href="/" class="logo logo-rodape"><Logo /> chatinhas</a>
+        <p>Opinião 100% nossa, sem patrocínio (por enquanto).<br />Feito por duas amigas que não conseguem ficar quietas · {new Date().getFullYear()}</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .topo {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--fundo);
+  }
+  .topo-conteudo { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--fonte-titulo); font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em;
+    text-decoration: none; color: var(--marinho);
+  }
+  nav { display: flex; gap: 6px; }
+  nav a {
+    text-decoration: none; font-weight: 600; color: var(--azul-cinza);
+    padding: 6px 14px; border-radius: 999px; transition: background 0.15s, color 0.15s;
+  }
+  nav a:hover { color: var(--marinho); background: var(--cinza-claro); }
+  nav a[aria-current='page'] { color: var(--branco); background: var(--marinho); }
+
+  main { min-height: 70vh; }
+
+  .rodape { background: var(--marinho); color: var(--azul-cinza-claro); margin-top: 96px; padding: 48px 0; }
+  .rodape-conteudo { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center; }
+  .logo-rodape { color: var(--branco); }
+  .logo-rodape :global(circle) { fill: var(--marinho); }
+  .rodape p { margin: 0; font-size: 0.9rem; }
+</style>
