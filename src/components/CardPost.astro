@@ -1,21 +1,23 @@
 ---
-// Card de um post no feed.
+// Card de um post no feed: capa colorida (ou foto) em cima, texto embaixo.
+// O tamanho (formato) e a cor vêm de src/lib/feed.ts.
 import type { CollectionEntry } from 'astro:content';
 import Veredito from './Veredito.astro';
 import { categorias, autoras, rotulo, dataCurta } from '../lib/rotulos';
+import type { Formato } from '../lib/feed';
 
 interface Props {
   post: CollectionEntry<'posts'>;
-  variante?: number;
-  destaque?: boolean;
+  formato?: Formato;
+  cor?: string;
 }
 
-const { post, variante = 0, destaque = false } = Astro.props;
+const { post, formato = 'pequeno', cor = 'marinho' } = Astro.props;
 const { titulo, resumo, capa, nota, categoria, autora, data } = post.data;
 const nomeCategoria = rotulo(categorias, categoria);
 ---
 
-<a href={`/posts/${post.id}`} class:list={['card', `variante-${variante % 3}`, { destaque }]} data-categoria={categoria}>
+<a href={`/posts/${post.id}`} class="card" data-categoria={categoria} data-formato={formato} data-cor={cor}>
   <div class="capa">
     {capa ? (
       <img src={capa} alt="" loading="lazy" />
@@ -42,61 +44,94 @@ const nomeCategoria = rotulo(categorias, categoria);
     background: var(--branco);
     border-radius: var(--raio);
     text-decoration: none;
+    min-height: 0;
     transition: transform 0.2s, box-shadow 0.2s;
   }
   .card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgb(20 33 61 / 0.1); }
   .card:hover h2 { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
+  /* Capa */
   .capa {
     position: relative;
-    aspect-ratio: 4 / 3;
+    flex: 0 0 42%;
     border-radius: var(--raio) var(--raio) 0 0;
     display: flex;
     align-items: flex-end;
-    padding: 20px;
+    padding: 18px 20px;
+    background: var(--cor-capa);
+    color: var(--cor-capa-texto);
   }
-  .capa img {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; border-radius: inherit;
-  }
-  .variante-0 .capa { --cor-capa: var(--marinho); color: var(--branco); }
-  .variante-1 .capa { --cor-capa: var(--azul-cinza-claro); color: var(--marinho); }
-  .variante-2 .capa { --cor-capa: var(--azul-cinza); color: var(--branco); }
-  .capa { background: var(--cor-capa); }
+  [data-cor='marinho'] .capa { --cor-capa: var(--marinho); --cor-capa-texto: var(--branco); }
+  [data-cor='claro'] .capa { --cor-capa: var(--azul-cinza-claro); --cor-capa-texto: var(--marinho); }
+  [data-cor='azul'] .capa { --cor-capa: var(--azul-cinza); --cor-capa-texto: var(--branco); }
+
+  .capa img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
 
   .capa-texto {
     font-family: var(--fonte-titulo);
     font-weight: 800;
-    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    font-size: 1.7rem;
     line-height: 0.95;
     letter-spacing: -0.03em;
     text-transform: lowercase;
-    margin-bottom: 18px;
+    margin-bottom: 12px;
   }
 
   /* "..." de alguém digitando, no canto da capa. */
   .digitando {
-    position: absolute; top: 18px; right: 18px;
-    display: flex; gap: 4px; padding: 9px 11px;
+    position: absolute; top: 16px; right: 16px;
+    display: flex; gap: 4px; padding: 8px 10px;
     border-radius: 14px 14px 14px 4px;
     background: currentColor;
   }
   .digitando i { width: 6px; height: 6px; border-radius: 50%; background: var(--cor-capa); }
 
   .selo-posicao { position: absolute; left: 16px; bottom: -14px; z-index: 1; }
+  .selo-posicao :global(.selo) {
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.75rem; font-weight: 700;
+    box-shadow: 0 2px 0 rgb(20 33 61 / 0.15);
+  }
 
-  .corpo { padding: 28px 22px 22px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
-  h2 { font-size: 1.4rem; }
-  .resumo { margin: 4px 0 0; color: var(--texto); }
-  .meta { margin: auto 0 0; padding-top: 12px; font-size: 0.85rem; color: var(--cinza); }
+  /* Texto */
+  .corpo { padding: 26px 20px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; min-height: 0; overflow: hidden; }
+  h2 {
+    font-size: 1.2rem;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+  }
+  .resumo {
+    margin: 2px 0 0; color: var(--texto);
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+  }
+  .meta { margin: auto 0 0; padding-top: 8px; font-size: 0.85rem; color: var(--cinza); }
 
-  /* Card em destaque (o primeiro do feed): ocupa duas colunas. */
-  .destaque { grid-column: span 2; }
-  .destaque .capa { aspect-ratio: 16 / 7; }
-  .destaque .capa-texto { font-size: clamp(2.4rem, 6vw, 4.5rem); }
-  .destaque h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+  /* Pequeno: capa baixinha, sem resumo. */
+  [data-formato='pequeno'] .resumo { display: none; }
+
+  /* Alto: capa alta, resumo mais longo. */
+  [data-formato='alto'] .capa { flex-basis: 52%; }
+  [data-formato='alto'] .capa-texto { font-size: 2.2rem; }
+  [data-formato='alto'] .resumo { -webkit-line-clamp: 5; }
+
+  /* Grande: tudo maior. */
+  [data-formato='grande'] .capa { flex-basis: 58%; padding: 24px 28px; }
+  [data-formato='grande'] .capa-texto { font-size: clamp(2.4rem, 5vw, 4.2rem); }
+  [data-formato='grande'] .corpo { padding: 30px 28px 22px; }
+  [data-formato='grande'] h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); -webkit-line-clamp: 2; }
+
+  /* Largo: capa à esquerda, texto à direita. */
+  [data-formato='largo'] { flex-direction: row; }
+  [data-formato='largo'] .capa { flex-basis: 46%; border-radius: var(--raio) 0 0 var(--raio); }
+  [data-formato='largo'] .capa-texto { font-size: 2rem; margin-bottom: 40px; }
+  [data-formato='largo'] .selo-posicao { bottom: 16px; }
+  [data-formato='largo'] .corpo { padding: 22px 22px 18px; }
+  [data-formato='largo'] h2 { font-size: 1.35rem; }
+
+  /* Celular: todos um embaixo do outro, com capa de altura fixa. */
   @media (max-width: 600px) {
-    .destaque { grid-column: span 1; }
-    .destaque .capa { aspect-ratio: 4 / 3; }
+    .card, [data-formato='largo'] { flex-direction: column; }
+    .capa, [data-formato] .capa { flex: none; aspect-ratio: 16 / 9; border-radius: var(--raio) var(--raio) 0 0 !important; }
+    [data-formato='largo'] .selo-posicao { bottom: -14px; }
+    [data-formato='largo'] .capa-texto { margin-bottom: 12px; }
+    [data-formato] .resumo { display: -webkit-box; }
   }
 </style>

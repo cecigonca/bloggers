@@ -1,5 +1,6 @@
 ---
-// Selinho com a nota e o veredito, tipo um adesivo: "4/5 · Aprovado".
+// Selinho com a nota e o veredito: "4★ · aprovado".
+import Estrela from './Estrela.astro';
 import { veredito } from '../lib/rotulos';
 
 interface Props {
@@ -8,27 +9,32 @@ interface Props {
 
 const { nota } = Astro.props;
 const { label } = veredito(nota);
-const tom = nota >= 4 ? 'alto' : nota === 3 ? 'medio' : 'baixo';
+const tom = nota === 5 ? 'ouro' : nota === 4 ? 'alto' : nota === 3 ? 'medio' : 'baixo';
 ---
 
-<span class:list={['selo', tom]}>
-  <strong>{nota}/5</strong> · {label}
+<span class:list={['selo', tom]} aria-label={`Nota ${nota} de 5: ${label}`}>
+  <strong>{nota}<Estrela /></strong> · {label.toLowerCase()}
 </span>
 
 <style>
   .selo {
-    display: inline-block;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 6px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 4px 12px 4px 10px;
     border-radius: 999px;
-    transform: rotate(-3deg);
     white-space: nowrap;
-    box-shadow: 0 2px 0 rgb(20 33 61 / 0.15);
   }
+  /* O número e a estrela ficam maiores que o nome, pra nota ser a primeira coisa que o olho lê. */
+  strong {
+    display: inline-flex; align-items: center; gap: 2px;
+    font-family: var(--fonte-titulo); font-size: 1.5em; font-weight: 800;
+    letter-spacing: 0; text-transform: none; line-height: 1;
+  }
+  .ouro { background: var(--dourado); color: var(--branco); }
   .alto { background: var(--marinho); color: var(--branco); }
   .medio { background: var(--azul-cinza); color: var(--branco); }
-  .baixo { background: var(--branco); color: var(--marinho); border: 2px solid var(--marinho); }
+  .baixo { background: var(--branco); color: var(--marinho); box-shadow: inset 0 0 0 1.5px var(--marinho); }
 </style>

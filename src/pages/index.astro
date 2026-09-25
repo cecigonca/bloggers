@@ -1,9 +1,10 @@
 ---
-// Página inicial: chamada + abas de tópicos + feed com todos os posts.
+// Página inicial: chamada + abas de tópicos + feed em mosaico com todos os posts.
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import CardPost from '../components/CardPost.astro';
 import { categorias } from '../lib/rotulos';
+import { formatoDoCard, corDoCard } from '../lib/feed';
 
 const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime() - a.data.data.getTime());
 ---
@@ -11,60 +12,70 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
 <Base>
   <section class="container hero">
     <div class="hero-texto">
-      <p class="sobrancelha">do grupo do zap pro blog</p>
-      <h1>A gente julga tudo.<br /><span>Agora é oficial.</span></h1>
+      <p class="sobrancelha">do wpp pro blog</p>
+      <h1><span>É isso mesmo,</span> a gente julga tudo.</h1>
       <p class="hero-sub">
-        Restaurante, série, rímel, aquele rolê de terça... Tudo que a gente já comentava só entre a gente,
-        agora aberto pra todo mundo. Porque todo mundo merece saber o que presta (e o que não presta).
+        Tudo que a gente já comentava só entre a gente, agora aberto pra todo mundo.
+        Porque todos merecem saber o que presta (e o que não presta).
       </p>
-      <a href="#feed" class="botao">ver os julgamentos ↓</a>
+      <div class="acoes">
+        <a href="#feed" class="botao">ver posts ↓</a>
+        <button type="button" class="link-notas" data-abrir-legenda>nossas notas →</button>
+      </div>
     </div>
 
     <div class="chat" aria-hidden="true">
-      <p class="balao delas">gente, alguém já foi naquele restaurante novo?</p>
-      <p class="balao nosso">FUI. não vão.</p>
-      <p class="balao delas">mas e a sobremesa??</p>
-      <p class="balao nosso">a sobremesa salvou. nota 2 e é por ela</p>
+      <p class="balao delas">ouuu, vc já comeu aquele doce que tá todo mundo postando no tiktok?</p>
+      <p class="balao nosso">mano sim... achei horrivel</p>
+      <p class="balao delas">SERIO?</p>
+      <p class="balao nosso">ai sim KKKKKKK nota 2</p>
       <p class="balao delas digitando"><i></i><i></i><i></i></p>
     </div>
   </section>
 
   <div id="feed" class="abas-faixa">
     <div class="container">
-      <nav class="abas" aria-label="Filtrar posts por tópico">
-        <button type="button" data-topico="" aria-pressed="true">Tudo</button>
-        {categorias.map((c) => (
-          <button type="button" data-topico={c.value} aria-pressed="false">{c.label}</button>
-        ))}
-      </nav>
+      <div class="abas-linha">
+        <nav class="abas" aria-label="Filtrar posts por tópico">
+          <button type="button" data-topico="" aria-pressed="true">Tudo</button>
+          {categorias.map((c) => (
+            <button type="button" data-topico={c.value} aria-pressed="false">{c.label}</button>
+          ))}
+        </nav>
+      </div>
     </div>
   </div>
 
   <section class="container feed">
-    <div class="grade" id="grade">
-      {posts.map((post, i) => <CardPost post={post} variante={i} destaque={i === 0} />)}
+    <div class="mosaico" id="mosaico">
+      {posts.map((post, i) => <CardPost post={post} formato={formatoDoCard(i)} cor={corDoCard(i)} />)}
     </div>
-    <p class="vazio" id="vazio" hidden={posts.length > 0}>
-      Nada por aqui ainda. A gente tá devendo esse julgamento.
-    </p>
+    <p class="vazio" id="vazio" hidden={posts.length > 0}>nada aqui ainda... sugestão?</p>
   </section>
 </Base>
 
 <script>
-  // Abas: mostra só os posts do tópico escolhido e guarda a escolha no link (?topico=...).
+  // Abas: mostra só os posts do tópico escolhido, reorganiza o mosaico
+  // e guarda a escolha no link (?topico=...).
+  import { formatoDoCard, corDoCard } from '../lib/feed';
+
   const botoes = document.querySelectorAll<HTMLButtonElement>('[data-topico]');
-  const cards = document.querySelectorAll<HTMLElement>('#grade > [data-categoria]');
+  const cards = document.querySelectorAll<HTMLElement>('#mosaico > [data-categoria]');
   const vazio = document.getElementById('vazio')!;
+  const feed = document.getElementById('feed')!;
 
   function filtrar(topico: string, atualizarLink = true) {
-    let primeiro = true;
+    let posicao = 0;
     cards.forEach((card) => {
       const aparece = !topico || card.dataset.categoria === topico;
       card.hidden = !aparece;
-      card.classList.toggle('destaque', aparece && primeiro);
-      if (aparece) primeiro = false;
+      if (aparece) {
+        card.dataset.formato = formatoDoCard(posicao);
+        card.dataset.cor = corDoCard(posicao);
+        posicao++;
+      }
     });
-    vazio.hidden = !primeiro;
+    vazio.hidden = posicao > 0;
     botoes.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.topico === topico)));
 
     if (atualizarLink) {
@@ -75,7 +86,6 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
     }
   }
 
-  const feed = document.getElementById('feed')!;
   botoes.forEach((b) =>
     b.addEventListener('click', () => {
       const abasGrudadas = feed.getBoundingClientRect().top <= 68;
@@ -93,16 +103,32 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
   .hero {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    gap: 48px;
+    gap: 56px;
     align-items: center;
     padding-top: 56px;
     padding-bottom: 72px;
   }
-  .hero h1 { font-size: clamp(2.8rem, 7vw, 5.4rem); font-weight: 800; margin: 14px 0 20px; }
+  .hero h1 { font-size: clamp(2.8rem, 6.5vw, 5rem); font-weight: 800; margin: 14px 0 20px; }
   .hero h1 span { color: var(--azul-cinza); }
-  .hero-sub { font-size: 1.15rem; color: var(--texto-suave); max-width: 34em; margin: 0 0 28px; }
+  .hero-sub { font-size: 1.15rem; color: var(--texto-suave); max-width: 32em; margin: 0 0 28px; }
+  .acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
+  .link-notas {
+    font: inherit;
+    font-weight: 700;
+    color: var(--marinho);
+    background: none;
+    border: 0;
+    padding: 12px 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+    text-decoration-color: var(--azul-cinza-claro);
+    transition: text-decoration-color 0.15s;
+  }
+  .link-notas:hover { text-decoration-color: var(--marinho); }
 
-  /* Conversinha de grupo, com os balões aparecendo um por um. */
+  /* Conversinha no chat, com os balões aparecendo um por um. */
   .chat {
     background: var(--branco);
     border-radius: 28px;
@@ -111,7 +137,6 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
     flex-direction: column;
     gap: 10px;
     box-shadow: 0 20px 50px rgb(20 33 61 / 0.08);
-    transform: rotate(1.5deg);
   }
   .balao {
     margin: 0;
@@ -123,11 +148,11 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
     animation: aparecer 0.4s ease-out both;
   }
   .delas { align-self: flex-start; background: var(--cinza-claro); border-bottom-left-radius: 6px; }
-  .nosso { align-self: flex-end; background: var(--marinho); color: var(--branco); border-bottom-right-radius: 6px; font-weight: 600; }
-  .balao:nth-child(2) { animation-delay: 0.5s; }
-  .balao:nth-child(3) { animation-delay: 1s; }
-  .balao:nth-child(4) { animation-delay: 1.5s; }
-  .balao:nth-child(5) { animation-delay: 2s; }
+  .nosso { align-self: flex-end; background: var(--marinho); color: var(--branco); border-bottom-right-radius: 6px; }
+  .balao:nth-child(2) { animation-delay: 0.6s; }
+  .balao:nth-child(3) { animation-delay: 1.2s; }
+  .balao:nth-child(4) { animation-delay: 1.8s; }
+  .balao:nth-child(5) { animation-delay: 2.4s; }
   .digitando { display: flex; gap: 5px; padding: 14px 16px; }
   .digitando i { width: 8px; height: 8px; border-radius: 50%; background: var(--cinza); animation: pulinho 1.2s infinite; }
   .digitando i:nth-child(2) { animation-delay: 0.15s; }
@@ -141,7 +166,7 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
     .hero { grid-template-columns: 1fr; padding-top: 32px; gap: 36px; }
   }
 
-  /* Abas de tópicos: faixa entre duas linhas, que gruda no topo ao rolar. */
+  /* Abas de tópicos: faixa entre duas linhas, em caixa alta. Grudam no topo ao rolar. */
   .abas-faixa {
     position: sticky;
     top: 68px;
@@ -149,16 +174,26 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
     background: var(--fundo);
     scroll-margin-top: 68px;
   }
-  .abas {
+  .abas-linha {
     display: flex;
-    gap: 4px;
-    overflow-x: auto;
-    scrollbar-width: none;
+    align-items: center;
+    gap: 12px;
     border-top: 1.5px solid var(--marinho);
     border-bottom: 1.5px solid var(--marinho);
     padding: 12px 0;
   }
+  .abas {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
   .abas::-webkit-scrollbar { display: none; }
+  /* Centraliza as abas; quando não couberem (celular), rolam pro lado sem cortar a primeira. */
+  .abas > :first-child { margin-left: auto; }
+  .abas > :last-child { margin-right: auto; }
   .abas button {
     flex: none;
     font: inherit;
@@ -177,6 +212,7 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
   .abas button:hover { background: var(--cinza-claro); }
   .abas button[aria-pressed='true'] { background: var(--marinho); color: var(--branco); }
 
-  .feed { padding-top: 36px; }
+
+  .feed { padding-top: 24px; }
   .vazio { text-align: center; color: var(--texto-suave); font-size: 1.1rem; padding: 60px 0; margin: 0; }
 </style>

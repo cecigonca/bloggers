@@ -14,11 +14,11 @@ export const categorias = [
 
 // A nota vira um "veredito" com nome, que é mais divertido que só estrelinha.
 export const notas = [
-  { value: '5', label: 'Obrigatório', descricao: 'larga tudo e vai' },
+  { value: '5', label: 'Obrigatório', descricao: 'larga tudo e vai. sério' },
   { value: '4', label: 'Aprovado', descricao: 'vale cada centavo' },
   { value: '3', label: 'De boa', descricao: 'não muda sua vida, mas ok' },
-  { value: '2', label: 'Meh', descricao: 'só se não tiver outra opção' },
-  { value: '1', label: 'Fujam', descricao: 'a gente sofreu pra você não sofrer' },
+  { value: '2', label: 'Meh', descricao: 'só se não tiver outra opção...' },
+  { value: '1', label: 'Fujam', descricao: 'a gente sofreu pra vc não sofrer' },
 ];
 
 export const autoras = [
