@@ -1,7 +1,9 @@
 ---
-// Card de um post no feed. O tamanho (formato) e a cor vêm de src/lib/feed.ts.
+// Card de um post no feed: capa colorida (ou foto) em cima, texto embaixo.
+// O tamanho (formato) e a cor vêm de src/lib/feed.ts.
 import type { CollectionEntry } from 'astro:content';
-import { categorias, autoras, rotulo, veredito, dataCurta } from '../lib/rotulos';
+import Veredito from './Veredito.astro';
+import { categorias, autoras, rotulo, dataCurta } from '../lib/rotulos';
 import type { Formato } from '../lib/feed';
 
 interface Props {
@@ -10,126 +12,126 @@ interface Props {
   cor?: string;
 }
 
-const { post, formato = 'pequeno', cor = 'branco' } = Astro.props;
+const { post, formato = 'pequeno', cor = 'marinho' } = Astro.props;
 const { titulo, resumo, capa, nota, categoria, autora, data } = post.data;
+const nomeCategoria = rotulo(categorias, categoria);
 ---
 
-<a
-  href={`/posts/${post.id}`}
-  class="card"
-  data-categoria={categoria}
-  data-formato={formato}
-  data-cor={cor}
-  data-foto={capa ? 'sim' : undefined}
->
-  {capa && <img src={capa} alt="" loading="lazy" class="foto" />}
-
-  <div class="topo-card">
-    <span class="categoria">{rotulo(categorias, categoria)}</span>
-    <span class="nota">{nota}/5 · {veredito(nota).label.toLowerCase()}</span>
+<a href={`/posts/${post.id}`} class="card" data-categoria={categoria} data-formato={formato} data-cor={cor}>
+  <div class="capa">
+    {capa ? (
+      <img src={capa} alt="" loading="lazy" />
+    ) : (
+      <>
+        <span class="digitando" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="capa-texto">{nomeCategoria}</span>
+      </>
+    )}
+    <span class="selo-posicao"><Veredito nota={nota} /></span>
   </div>
-
-  {!capa && resumo && <p class="balao">{resumo}</p>}
-
-  <div class="rodape-card">
+  <div class="corpo">
+    {capa && <p class="sobrancelha">{nomeCategoria}</p>}
     <h2>{titulo}</h2>
+    {resumo && <p class="resumo">{resumo}</p>}
     <p class="meta">por {rotulo(autoras, autora)} · {dataCurta(data)}</p>
   </div>
 </a>
 
 <style>
   .card {
-    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    padding: 20px;
+    background: var(--branco);
     border-radius: var(--raio);
-    overflow: hidden;
     text-decoration: none;
-    background: var(--cor-fundo);
-    color: var(--cor-texto);
+    min-height: 0;
     transition: transform 0.2s, box-shadow 0.2s;
   }
-  .card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgb(20 33 61 / 0.12); }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgb(20 33 61 / 0.1); }
   .card:hover h2 { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
-  /* Cores de cada card */
-  [data-cor='marinho'] {
-    --cor-fundo: var(--marinho); --cor-texto: var(--branco); --cor-suave: var(--azul-cinza-claro);
-    --cor-balao: var(--branco); --cor-balao-texto: var(--marinho);
-    --cor-nota: var(--branco); --cor-nota-texto: var(--marinho);
+  /* Capa */
+  .capa {
+    position: relative;
+    flex: 0 0 42%;
+    border-radius: var(--raio) var(--raio) 0 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 18px 20px;
+    background: var(--cor-capa);
+    color: var(--cor-capa-texto);
   }
-  [data-cor='claro'] {
-    --cor-fundo: var(--azul-cinza-claro); --cor-texto: var(--marinho); --cor-suave: var(--azul-cinza);
-    --cor-balao: var(--marinho); --cor-balao-texto: var(--branco);
-    --cor-nota: var(--marinho); --cor-nota-texto: var(--branco);
-  }
-  [data-cor='branco'] {
-    --cor-fundo: var(--branco); --cor-texto: var(--marinho); --cor-suave: var(--cinza);
-    --cor-balao: var(--cinza-claro); --cor-balao-texto: var(--marinho);
-    --cor-nota: var(--marinho); --cor-nota-texto: var(--branco);
-  }
-  [data-cor='azul'] {
-    --cor-fundo: var(--azul-cinza); --cor-texto: var(--branco); --cor-suave: var(--cinza-claro);
-    --cor-balao: var(--branco); --cor-balao-texto: var(--marinho);
-    --cor-nota: var(--marinho); --cor-nota-texto: var(--branco);
-  }
-  /* Com foto: a foto ocupa o card todo e o texto fica branco por cima. */
-  [data-foto] {
-    --cor-texto: var(--branco); --cor-suave: var(--cinza-claro);
-    --cor-nota: var(--branco); --cor-nota-texto: var(--marinho);
+  [data-cor='marinho'] .capa { --cor-capa: var(--marinho); --cor-capa-texto: var(--branco); }
+  [data-cor='claro'] .capa { --cor-capa: var(--azul-cinza-claro); --cor-capa-texto: var(--marinho); }
+  [data-cor='azul'] .capa { --cor-capa: var(--azul-cinza); --cor-capa-texto: var(--branco); }
+
+  .capa img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+
+  .capa-texto {
+    font-family: var(--fonte-titulo);
+    font-weight: 800;
+    font-size: 1.7rem;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: lowercase;
+    margin-bottom: 12px;
   }
 
-  .foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
-  [data-foto]::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(to top, rgb(20 33 61 / 0.88), rgb(20 33 61 / 0.1) 65%);
+  /* "..." de alguém digitando, no canto da capa. */
+  .digitando {
+    position: absolute; top: 16px; right: 16px;
+    display: flex; gap: 4px; padding: 8px 10px;
+    border-radius: 14px 14px 14px 4px;
+    background: currentColor;
   }
-  .card:hover .foto { transform: scale(1.04); }
-  .topo-card, .balao, .rodape-card { position: relative; z-index: 1; }
+  .digitando i { width: 6px; height: 6px; border-radius: 50%; background: var(--cor-capa); }
 
-  .topo-card { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .categoria { font-size: 0.85rem; font-weight: 600; color: var(--cor-suave); text-transform: lowercase; }
-  .nota {
-    font-size: 0.78rem; font-weight: 700; white-space: nowrap;
-    background: var(--cor-nota); color: var(--cor-nota-texto);
-    padding: 4px 10px; border-radius: 999px;
-  }
-
-  /* A "fofoca em uma frase" vira um balão de chat. */
-  .balao {
-    align-self: flex-start;
-    margin: auto 0;
-    max-width: 92%;
-    background: var(--cor-balao);
-    color: var(--cor-balao-texto);
-    padding: 12px 16px;
-    border-radius: 20px 20px 20px 6px;
-    font-size: 1.02rem;
-    line-height: 1.35;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
+  .selo-posicao { position: absolute; left: 16px; bottom: -14px; z-index: 1; }
+  .selo-posicao :global(.selo) {
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.75rem; font-weight: 700;
+    box-shadow: 0 2px 0 rgb(20 33 61 / 0.15);
   }
 
-  .rodape-card { margin-top: auto; }
+  /* Texto */
+  .corpo { padding: 26px 20px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; min-height: 0; overflow: hidden; }
   h2 {
-    font-size: 1.25rem;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
+    font-size: 1.2rem;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
   }
-  .meta { margin: 8px 0 0; font-size: 0.85rem; color: var(--cor-suave); }
+  .resumo {
+    margin: 2px 0 0; color: var(--texto);
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+  }
+  .meta { margin: auto 0 0; padding-top: 8px; font-size: 0.85rem; color: var(--cinza); }
 
-  /* Ajustes por tamanho */
-  [data-formato='pequeno'] .balao { display: none; }
-  [data-formato='grande'] { padding: 28px; }
-  [data-formato='grande'] h2 { font-size: clamp(1.6rem, 2.6vw, 2.3rem); }
-  [data-formato='grande'] .balao { font-size: clamp(1.15rem, 1.8vw, 1.45rem); -webkit-line-clamp: 5; max-width: 80%; }
-  [data-formato='alto'] .balao { -webkit-line-clamp: 7; }
-  [data-formato='largo'] h2 { font-size: 1.5rem; -webkit-line-clamp: 2; }
-  [data-formato='largo'] .balao { -webkit-line-clamp: 2; max-width: 75%; }
+  /* Pequeno: capa baixinha, sem resumo. */
+  [data-formato='pequeno'] .resumo { display: none; }
+
+  /* Alto: capa alta, resumo mais longo. */
+  [data-formato='alto'] .capa { flex-basis: 52%; }
+  [data-formato='alto'] .capa-texto { font-size: 2.2rem; }
+  [data-formato='alto'] .resumo { -webkit-line-clamp: 5; }
+
+  /* Grande: tudo maior. */
+  [data-formato='grande'] .capa { flex-basis: 58%; padding: 24px 28px; }
+  [data-formato='grande'] .capa-texto { font-size: clamp(2.4rem, 5vw, 4.2rem); }
+  [data-formato='grande'] .corpo { padding: 30px 28px 22px; }
+  [data-formato='grande'] h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); -webkit-line-clamp: 2; }
+
+  /* Largo: capa à esquerda, texto à direita. */
+  [data-formato='largo'] { flex-direction: row; }
+  [data-formato='largo'] .capa { flex-basis: 46%; border-radius: var(--raio) 0 0 var(--raio); }
+  [data-formato='largo'] .capa-texto { font-size: 2rem; margin-bottom: 40px; }
+  [data-formato='largo'] .selo-posicao { bottom: 16px; }
+  [data-formato='largo'] .corpo { padding: 22px 22px 18px; }
+  [data-formato='largo'] h2 { font-size: 1.35rem; }
+
+  /* Celular: todos um embaixo do outro, com capa de altura fixa. */
+  @media (max-width: 600px) {
+    .card, [data-formato='largo'] { flex-direction: column; }
+    .capa, [data-formato] .capa { flex: none; aspect-ratio: 16 / 9; border-radius: var(--raio) var(--raio) 0 0 !important; }
+    [data-formato='largo'] .selo-posicao { bottom: -14px; }
+    [data-formato='largo'] .capa-texto { margin-bottom: 12px; }
+    [data-formato] .resumo { display: -webkit-box; }
+  }
 </style>

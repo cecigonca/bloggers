@@ -2,6 +2,7 @@
 // Moldura comum a todas as páginas: topo, conteúdo e rodapé.
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
+import LegendaNotas from '../components/LegendaNotas.astro';
 
 interface Props {
   titulo?: string;
@@ -49,6 +50,8 @@ const caminho = Astro.url.pathname;
         <p>chatinhas © {new Date().getFullYear()} · sem publi (ainda)</p>
       </div>
     </footer>
+
+    <LegendaNotas />
   </body>
 </html>
 

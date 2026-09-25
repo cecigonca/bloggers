@@ -1,0 +1,75 @@
+---
+// Janelinha com o significado de cada nota. Abre por cima da página quando alguém
+// clica em qualquer elemento com o atributo data-abrir-legenda.
+import Veredito from './Veredito.astro';
+import { notas } from '../lib/rotulos';
+---
+
+<dialog id="legenda-notas" class="legenda" aria-labelledby="legenda-titulo">
+  <div class="caixa">
+    <button type="button" class="fechar" data-fechar-legenda aria-label="Fechar">×</button>
+    <p class="sobrancelha">legenda</p>
+    <h2 id="legenda-titulo">O que é cada nota</h2>
+    <ul>
+      {notas.map((n) => (
+        <li>
+          <span class="selo-largo"><Veredito nota={Number(n.value)} /></span>
+          <span>{n.descricao}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</dialog>
+
+<script>
+  const dialogo = document.getElementById('legenda-notas') as HTMLDialogElement;
+
+  document.querySelectorAll('[data-abrir-legenda]').forEach((botao) =>
+    botao.addEventListener('click', (evento) => {
+      evento.preventDefault();
+      dialogo.showModal();
+    })
+  );
+
+  // Fecha no X ou clicando fora da caixa (a tecla Esc o navegador já resolve).
+  dialogo.addEventListener('click', (evento) => {
+    const alvo = evento.target as HTMLElement;
+    if (alvo === dialogo || alvo.closest('[data-fechar-legenda]')) dialogo.close();
+  });
+</script>
+
+<style>
+  .legenda {
+    border: 0;
+    padding: 0;
+    background: none;
+    max-width: min(520px, calc(100% - 32px));
+    width: 100%;
+  }
+  .legenda::backdrop { background: rgb(20 33 61 / 0.55); }
+  .legenda[open] .caixa { animation: surgir 0.2s ease-out; }
+
+  .caixa {
+    position: relative;
+    background: var(--branco);
+    color: var(--texto);
+    border-radius: 24px;
+    padding: 32px 28px 28px;
+  }
+  h2 { font-size: 1.9rem; font-weight: 800; margin: 6px 0 24px; }
+
+  .fechar {
+    position: absolute; top: 14px; right: 14px;
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 0; background: var(--cinza-claro); color: var(--marinho);
+    font-size: 1.5rem; line-height: 1; cursor: pointer;
+  }
+  .fechar:hover { background: var(--azul-cinza-claro); }
+
+  ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+  li { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .selo-largo :global(.selo) { min-width: 160px; text-align: center; }
+
+  @keyframes surgir { from { opacity: 0; transform: translateY(12px) scale(0.97); } }
+  @media (prefers-reduced-motion: reduce) { .legenda[open] .caixa { animation: none; } }
+</style>

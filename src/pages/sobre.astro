@@ -10,7 +10,7 @@ import { notas } from '../lib/rotulos';
 const reader = createReader(process.cwd(), keystaticConfig);
 const sobre = await reader.singletons.sobre.read();
 
-const chamada = sobre?.chamada || 'basicamente duas amigas com opinião sobre tudo';
+const chamada = sobre?.chamada || 'Basicamente duas amigas com opinião sobre tudo';
 const paragrafos = (sobre?.texto ?? '').split(/\n\s*\n/).filter(Boolean);
 const pessoas = sobre?.pessoas ?? [];
 ---
@@ -39,7 +39,7 @@ const pessoas = sobre?.pessoas ?? [];
   )}
 
   <section class="container-estreito escala">
-    <h2>como a gente avalia</h2>
+    <h2>Como a gente avalia</h2>
     <p class="texto">Nada de estrelinha. Cada post termina com um veredito, e ele é final (até a gente mudar de ideia).</p>
     <ul>
       {notas.map((n) => (

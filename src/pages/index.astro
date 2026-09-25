@@ -13,7 +13,7 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
   <section class="container hero">
     <div class="hero-texto">
       <p class="sobrancelha">do wpp pro blog</p>
-      <h1><span>é isso mesmo,</span> a gente julga tudo.</h1>
+      <h1><span>É isso mesmo,</span> a gente julga tudo.</h1>
       <p class="hero-sub">
         Tudo que a gente já comentava só entre a gente, agora aberto pra todo mundo.
         Porque todo mundo merece saber o que presta (e o que não presta).
@@ -32,12 +32,18 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
 
   <div id="feed" class="abas-faixa">
     <div class="container">
-      <nav class="abas" aria-label="Filtrar posts por tópico">
-        <button type="button" data-topico="" aria-pressed="true">tudo</button>
-        {categorias.map((c) => (
-          <button type="button" data-topico={c.value} aria-pressed="false">{c.label}</button>
-        ))}
-      </nav>
+      <div class="abas-linha">
+        <nav class="abas" aria-label="Filtrar posts por tópico">
+          <button type="button" data-topico="" aria-pressed="true">Tudo</button>
+          {categorias.map((c) => (
+            <button type="button" data-topico={c.value} aria-pressed="false">{c.label}</button>
+          ))}
+        </nav>
+        <button type="button" class="botao-legenda" data-abrir-legenda>
+          <span class="texto-legenda">O que é cada nota?</span>
+          <span class="interrogacao" aria-hidden="true">?</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -145,7 +151,7 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
     .hero { grid-template-columns: 1fr; padding-top: 32px; gap: 36px; }
   }
 
-  /* Abas de tópicos: a selecionada vira um balãozinho de chat. Grudam no topo ao rolar. */
+  /* Abas de tópicos: faixa entre duas linhas, em caixa alta. Grudam no topo ao rolar. */
   .abas-faixa {
     position: sticky;
     top: 68px;
@@ -153,34 +159,57 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
     background: var(--fundo);
     scroll-margin-top: 68px;
   }
+  .abas-linha {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-top: 1.5px solid var(--marinho);
+    border-bottom: 1.5px solid var(--marinho);
+    padding: 12px 0;
+  }
   .abas {
+    flex: 1;
+    min-width: 0;
     display: flex;
     gap: 4px;
     overflow-x: auto;
     scrollbar-width: none;
-    padding: 12px 0;
   }
   .abas::-webkit-scrollbar { display: none; }
-  .abas button {
+  .abas button, .botao-legenda {
     flex: none;
     font: inherit;
-    font-weight: 600;
-    font-size: 1rem;
-    text-transform: lowercase;
-    color: var(--azul-cinza);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--marinho);
     background: none;
     border: 0;
     border-radius: 999px;
     padding: 8px 16px;
     cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-radius 0.15s;
+    transition: background 0.15s, color 0.15s;
   }
-  .abas button:hover { color: var(--marinho); background: var(--cinza-claro); }
-  .abas button[aria-pressed='true'] {
-    background: var(--marinho);
-    color: var(--branco);
-    border-radius: 18px 18px 18px 6px;
+  .abas button:hover { background: var(--cinza-claro); }
+  .abas button[aria-pressed='true'] { background: var(--marinho); color: var(--branco); }
+
+  /* Botão da legenda das notas, no fim da faixa. */
+  .botao-legenda {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--azul-cinza);
+    padding-right: 6px;
   }
+  .botao-legenda:hover { color: var(--marinho); }
+  .interrogacao {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: grid; place-items: center;
+    border: 1.5px solid currentColor;
+    font-size: 0.8rem;
+  }
+  @media (max-width: 800px) { .texto-legenda { display: none; } }
 
   .feed { padding-top: 24px; }
   .vazio { text-align: center; color: var(--texto-suave); font-size: 1.1rem; padding: 60px 0; margin: 0; }

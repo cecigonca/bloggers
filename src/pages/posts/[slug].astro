@@ -37,7 +37,7 @@ const relacionados = todos
       <div class="meta">
         <span class="avatar" aria-hidden="true">{nomeAutora.charAt(0)}</span>
         <span>por <strong>{nomeAutora}</strong><br /><span class="data">{dataLonga(data)}</span></span>
-        <span class="meta-selo"><Veredito nota={nota} /></span>
+        <button type="button" class="meta-selo" data-abrir-legenda title="O que é cada nota?"><Veredito nota={nota} /><span class="interrogacao" aria-hidden="true">?</span></button>
       </div>
     </header>
 
@@ -69,7 +69,7 @@ const relacionados = todos
 
   {relacionados.length > 0 && (
     <section class="container mais">
-      <h2>leia também</h2>
+      <h2>Leia também</h2>
       <div class="trio">
         {relacionados.map((p, i) => <CardPost post={p} cor={corDoCard(i + 1)} />)}
       </div>
@@ -98,7 +98,15 @@ const relacionados = todos
     font-family: var(--fonte-titulo); font-weight: 800; font-size: 1.2rem;
   }
   .data { font-size: 0.9rem; color: var(--cinza); }
-  .meta-selo { margin-left: auto; }
+  .meta-selo {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
+    font: inherit; background: none; border: 0; padding: 0; cursor: pointer; color: var(--azul-cinza);
+  }
+  .meta-selo:hover { color: var(--marinho); }
+  .interrogacao {
+    width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+    border: 1.5px solid currentColor; font-size: 0.75rem; font-weight: 700;
+  }
 
   .capa {
     width: min(1100px, calc(100% - 32px));
@@ -137,7 +145,7 @@ const relacionados = todos
   .veredito-linha { display: flex; align-items: center; gap: 24px; margin-top: 8px; }
   .nota-grande { font-family: var(--fonte-titulo); font-weight: 800; font-size: 5rem; line-height: 1; margin: 0; }
   .nota-grande span { font-size: 2rem; color: var(--azul-cinza-claro); }
-  .veredito-nome { font-family: var(--fonte-titulo); font-weight: 800; font-size: 2rem; margin: 0; text-transform: lowercase; }
+  .veredito-nome { font-family: var(--fonte-titulo); font-weight: 800; font-size: 2rem; margin: 0; }
   .veredito-descricao { margin: 0; color: var(--azul-cinza-claro); }
 
   .tags { list-style: none; padding: 0; margin: 24px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
