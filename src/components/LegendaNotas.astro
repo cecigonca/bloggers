@@ -1,32 +1,28 @@
 ---
-// Legenda das notas em forma de conversa de chat. Abre por cima da página quando alguém
-// clica em qualquer elemento com o atributo data-abrir-legenda.
-import Logo from './Logo.astro';
+// Legenda das notas: uma régua de 1 a 5 (no celular vira lista).
+// Abre por cima da página quando alguém clica em qualquer elemento com o atributo data-abrir-legenda.
 import { notas } from '../lib/rotulos';
+
+const escala = [...notas].sort((a, b) => Number(a.value) - Number(b.value));
 ---
 
 <dialog id="legenda-notas" class="legenda" aria-labelledby="legenda-titulo">
-  <div class="chat">
-    <header class="cabecalho">
-      <span class="avatar"><Logo /></span>
-      <div>
-        <h2 id="legenda-titulo">chatinhas</h2>
-        <p class="status">explicando as notas...</p>
-      </div>
-      <button type="button" class="fechar" data-fechar-legenda aria-label="Fechar">×</button>
-    </header>
+  <div class="caixa">
+    <button type="button" class="fechar" data-fechar-legenda aria-label="Fechar">×</button>
+    <h2 id="legenda-titulo">Nossas notas</h2>
 
-    <div class="mensagens">
-      <p class="balao delas">tá, mas o que significa cada nota?</p>
-      <p class="balao nosso">senta que lá vem</p>
-      {notas.map((n) => (
-        <p class:list={['balao', 'nosso', `nota-${n.value}`]}>
-          <span class="nota">{n.value}/5 · {n.label.toLowerCase()}</span>
-          {n.descricao}
-        </p>
+    <ol class="regua">
+      {escala.map((n) => (
+        <li class={`degrau nota-${n.value}`}>
+          <span class="barra" aria-hidden="true"></span>
+          <span class="numero">{n.value}</span>
+          <span class="textos">
+            <strong>{n.label.toLowerCase()}</strong>
+            <span class="frase">{n.descricao}</span>
+          </span>
+        </li>
       ))}
-      <p class="balao delas">anotado KKKKKK</p>
-    </div>
+    </ol>
   </div>
 </dialog>
 
@@ -40,7 +36,7 @@ import { notas } from '../lib/rotulos';
     })
   );
 
-  // Fecha no X ou clicando fora da conversa (a tecla Esc o navegador já resolve).
+  // Fecha no X ou clicando fora da caixa (a tecla Esc o navegador já resolve).
   dialogo.addEventListener('click', (evento) => {
     const alvo = evento.target as HTMLElement;
     if (alvo === dialogo || alvo.closest('[data-fechar-legenda]')) dialogo.close();
@@ -52,93 +48,68 @@ import { notas } from '../lib/rotulos';
     border: 0;
     padding: 0;
     background: none;
-    width: min(420px, calc(100% - 32px));
+    width: min(820px, calc(100% - 32px));
     max-height: calc(100% - 32px);
   }
-  .legenda::backdrop { background: rgb(20 33 61 / 0.55); }
+  .legenda::backdrop { background: rgb(20 33 61 / 0.5); }
+  .legenda[open] .caixa { animation: surgir 0.2s ease-out; }
 
-  .chat {
-    background: var(--fundo);
-    border-radius: 28px;
-    overflow: hidden;
-    box-shadow: 0 30px 60px rgb(20 33 61 / 0.3);
-  }
-  .legenda[open] .chat { animation: surgir 0.25s ease-out; }
-
-  .cabecalho {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  .caixa {
+    position: relative;
     background: var(--branco);
-    padding: 14px 14px 14px 18px;
-    border-bottom: 1px solid var(--borda);
+    color: var(--texto);
+    border-radius: 24px;
+    padding: 36px 36px 40px;
   }
-  .avatar {
-    width: 42px; height: 42px; border-radius: 50%;
-    display: grid; place-items: center;
-    background: var(--cinza-claro); color: var(--marinho);
-  }
-  .avatar :global(svg) { width: 24px; height: 24px; }
-  h2 { font-size: 1.1rem; font-weight: 800; }
-  .status { margin: 0; font-size: 0.8rem; color: var(--azul-cinza); }
+  h2 { font-size: 2rem; font-weight: 800; margin: 0 0 32px; }
+
   .fechar {
-    margin-left: auto;
-    width: 38px; height: 38px; border-radius: 50%;
+    position: absolute; top: 16px; right: 16px;
+    width: 40px; height: 40px; border-radius: 50%;
     border: 0; background: var(--cinza-claro); color: var(--marinho);
-    font-size: 1.4rem; line-height: 1; cursor: pointer;
+    font-size: 1.5rem; line-height: 1; cursor: pointer;
   }
   .fechar:hover { background: var(--azul-cinza-claro); }
 
-  .mensagens {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 20px 16px 22px;
-    max-height: 70vh;
-    overflow-y: auto;
-  }
-
-  .balao {
+  /* Régua: cinco degraus lado a lado, a barra de cima vai do cinza ao marinho. */
+  .regua {
+    list-style: none;
+    padding: 0;
     margin: 0;
-    max-width: 85%;
-    padding: 10px 14px;
-    border-radius: 20px;
-    font-size: 0.98rem;
-    line-height: 1.35;
-    animation: aparecer 0.3s ease-out both;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
   }
-  .delas { align-self: flex-start; background: var(--cinza-claro); border-bottom-left-radius: 6px; }
-  .nosso { align-self: flex-end; background: var(--marinho); color: var(--branco); border-bottom-right-radius: 6px; }
+  .degrau { display: flex; flex-direction: column; gap: 10px; }
+  .barra { height: 10px; border-radius: 999px; background: var(--cor-degrau); }
+  .nota-1 { --cor-degrau: var(--cinza-claro); }
+  .nota-2 { --cor-degrau: var(--azul-cinza-claro); }
+  .nota-3 { --cor-degrau: var(--azul-cinza); }
+  .nota-4 { --cor-degrau: var(--marinho-claro); }
+  .nota-5 { --cor-degrau: var(--marinho); }
 
-  /* Cada nota: o selinho em cima, a explicação embaixo. */
-  .nota {
-    display: block;
-    width: fit-content;
-    margin-bottom: 4px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 3px 10px;
-    border-radius: 999px;
-    background: var(--branco);
-    color: var(--marinho);
+  .numero {
+    font-family: var(--fonte-titulo);
+    font-weight: 800;
+    font-size: 4rem;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin-top: 6px;
   }
-  .nota-3 .nota { background: var(--azul-cinza-claro); }
-  .nota-2 .nota, .nota-1 .nota { background: transparent; color: var(--branco); box-shadow: inset 0 0 0 1.5px var(--azul-cinza-claro); }
+  .textos { display: flex; flex-direction: column; gap: 4px; padding-right: 8px; }
+  strong { font-size: 1.05rem; font-weight: 700; }
+  .frase { font-size: 0.92rem; line-height: 1.35; color: var(--texto-suave); }
 
-  /* Mensagens chegando uma de cada vez, toda vez que a legenda abre. */
-  .balao:nth-child(2) { animation-delay: 0.35s; }
-  .balao:nth-child(3) { animation-delay: 0.7s; }
-  .balao:nth-child(4) { animation-delay: 0.95s; }
-  .balao:nth-child(5) { animation-delay: 1.2s; }
-  .balao:nth-child(6) { animation-delay: 1.45s; }
-  .balao:nth-child(7) { animation-delay: 1.7s; }
-  .balao:nth-child(8) { animation-delay: 2.2s; }
-
-  @keyframes surgir { from { opacity: 0; transform: translateY(16px) scale(0.97); } }
-  @keyframes aparecer { from { opacity: 0; transform: translateY(8px) scale(0.96); } }
-  @media (prefers-reduced-motion: reduce) {
-    .legenda[open] .chat, .balao { animation: none; }
+  /* Celular: vira lista, um embaixo do outro, com a barrinha na lateral. */
+  @media (max-width: 640px) {
+    .caixa { padding: 28px 22px 26px; }
+    h2 { font-size: 1.6rem; margin-bottom: 20px; }
+    .regua { grid-template-columns: 1fr; gap: 16px; }
+    .degrau { flex-direction: row; align-items: center; gap: 14px; }
+    .barra { width: 6px; height: auto; align-self: stretch; }
+    .numero { font-size: 2.6rem; margin: 0; width: 1.2ch; }
   }
+
+  @keyframes surgir { from { opacity: 0; transform: translateY(12px); } }
+  @media (prefers-reduced-motion: reduce) { .legenda[open] .caixa { animation: none; } }
 </style>

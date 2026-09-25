@@ -22,6 +22,7 @@ Explique tudo em portuguÃªs simples, sem jargÃ£o, e sempre diga como ver o r
 - Fontes (Google Fonts): **Bricolage Grotesque** nos tÃ­tulos, **DM Sans** no texto.
 - Elementos marcantes: balÃµes de conversa (chat do hero, logo, aba selecionada, "fofoca em uma frase" nos cards), cards com cantos bem arredondados.
 - Abas de tÃ³picos: em minÃºscula, a selecionada vira um balÃ£o de chat, grudadas no topo ao rolar. (A referÃªncia inicial era um menu em caixa alta entre duas linhas; mudamos para ter identidade prÃ³pria.)
+- Legenda das notas (src/components/LegendaNotas.astro, um <dialog>): régua de 1 a 5 com número grande, nome e frase curta; no celular vira lista. Abre pelo link "nossas notas →" ao lado do botão "ver posts" e pelo selo na página do post (qualquer elemento com `data-abrir-legenda`). NÃO colocar na faixa de abas e NÃO fazer em formato de chat (a Cecília achou brega).
 - Feed em mosaico: 4 formatos (grande, largo, alto, pequeno) e 4 cores num padrÃ£o que se repete (`src/lib/feed.ts`), recalculado ao filtrar. Card com foto = foto ocupando tudo; sem foto = resumo num balÃ£o de chat.
 
 ## DecisÃµes tÃ©cnicas

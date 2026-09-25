@@ -18,7 +18,10 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
         Tudo que a gente já comentava só entre a gente, agora aberto pra todo mundo.
         Porque todo mundo merece saber o que presta (e o que não presta).
       </p>
-      <a href="#feed" class="botao">ver posts ↓</a>
+      <div class="acoes">
+        <a href="#feed" class="botao">ver posts ↓</a>
+        <button type="button" class="link-notas" data-abrir-legenda>nossas notas →</button>
+      </div>
     </div>
 
     <div class="chat" aria-hidden="true">
@@ -39,10 +42,6 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
             <button type="button" data-topico={c.value} aria-pressed="false">{c.label}</button>
           ))}
         </nav>
-        <button type="button" class="botao-legenda" data-abrir-legenda>
-          <span class="texto-legenda">O que é cada nota?</span>
-          <span class="interrogacao" aria-hidden="true">?</span>
-        </button>
       </div>
     </div>
   </div>
@@ -112,6 +111,22 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
   .hero h1 { font-size: clamp(2.8rem, 6.5vw, 5rem); font-weight: 800; margin: 14px 0 20px; }
   .hero h1 span { color: var(--azul-cinza); }
   .hero-sub { font-size: 1.15rem; color: var(--texto-suave); max-width: 32em; margin: 0 0 28px; }
+  .acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
+  .link-notas {
+    font: inherit;
+    font-weight: 700;
+    color: var(--marinho);
+    background: none;
+    border: 0;
+    padding: 12px 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+    text-decoration-color: var(--azul-cinza-claro);
+    transition: text-decoration-color 0.15s;
+  }
+  .link-notas:hover { text-decoration-color: var(--marinho); }
 
   /* Conversinha no chat, com os balões aparecendo um por um. */
   .chat {
@@ -176,7 +191,7 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
     scrollbar-width: none;
   }
   .abas::-webkit-scrollbar { display: none; }
-  .abas button, .botao-legenda {
+  .abas button {
     flex: none;
     font: inherit;
     font-weight: 700;
@@ -194,22 +209,6 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
   .abas button:hover { background: var(--cinza-claro); }
   .abas button[aria-pressed='true'] { background: var(--marinho); color: var(--branco); }
 
-  /* Botão da legenda das notas, no fim da faixa. */
-  .botao-legenda {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--azul-cinza);
-    padding-right: 6px;
-  }
-  .botao-legenda:hover { color: var(--marinho); }
-  .interrogacao {
-    width: 24px; height: 24px; border-radius: 50%;
-    display: grid; place-items: center;
-    border: 1.5px solid currentColor;
-    font-size: 0.8rem;
-  }
-  @media (max-width: 800px) { .texto-legenda { display: none; } }
 
   .feed { padding-top: 24px; }
   .vazio { text-align: center; color: var(--texto-suave); font-size: 1.1rem; padding: 60px 0; margin: 0; }
