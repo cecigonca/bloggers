@@ -46,7 +46,7 @@ export default config({
         nota: fields.select({
           label: 'Veredito',
           description: 'O que vocês acharam, no fim das contas?',
-          options: notas.map((n) => ({ value: n.value, label: `${n.value} · ${n.label} (${n.descricao})` })),
+          options: notas.map((n) => ({ value: n.value, label: `${n.value}★ · ${n.label} (${n.descricao})` })),
           defaultValue: '3',
         }),
         resumo: fields.text({
