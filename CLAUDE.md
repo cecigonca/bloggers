@@ -48,6 +48,7 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
 - **Página "Sobre nós":** editável pelo admin (singleton `sobre`), salva em `src/data/sobre.yaml`, lida com o reader do Keystatic.
 - **Imagens:** `public/images/posts/` e `public/images/sobre/`.
 - **Filtro por tópico na home:** feito no navegador (JS em `src/pages/index.astro`) e guardado no link como `?topico=...`.
+- **Post em mais de uma aba:** campo `categoria` (principal, vai na capa do card) + `tambemEm` (lista de outras abas, ex.: `trending`). O card leva todas em `data-categorias`; na página do post viram chips clicáveis.
 - **Hospedagem planejada:** Vercel (adapter `@astrojs/vercel` já instalado).
 - **Storage do Keystatic:** `local` por enquanto. Na etapa de ir pro ar, trocar para `github` (repo `cecigonca/bloggers`) e configurar o GitHub App do Keystatic.
 - Evitar `backdrop-filter` no topo fixo: dava problema de renderização ao rolar a página.

@@ -60,14 +60,14 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
   import { formatoDoCard, corDoCard } from '../lib/feed';
 
   const botoes = document.querySelectorAll<HTMLButtonElement>('[data-topico]');
-  const cards = document.querySelectorAll<HTMLElement>('#mosaico > [data-categoria]');
+  const cards = document.querySelectorAll<HTMLElement>('#mosaico > [data-categorias]');
   const vazio = document.getElementById('vazio')!;
   const feed = document.getElementById('feed')!;
 
   function filtrar(topico: string, atualizarLink = true) {
     let posicao = 0;
     cards.forEach((card) => {
-      const aparece = !topico || card.dataset.categoria === topico;
+      const aparece = !topico || (card.dataset.categorias ?? '').split(' ').includes(topico);
       card.hidden = !aparece;
       if (aparece) {
         card.dataset.formato = formatoDoCard(posicao);

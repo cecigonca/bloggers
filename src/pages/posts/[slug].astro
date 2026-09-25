@@ -14,25 +14,31 @@ export async function getStaticPaths() {
 }
 
 const { post, todos } = Astro.props;
-const { titulo, resumo, capa, nota, categoria, autora, data, tags } = post.data;
+const { titulo, resumo, capa, nota, categoria, tambemEm, autora, data, tags } = post.data;
 const { Content } = await render(post);
 const nomeAutora = rotulo(autoras, autora);
 const final = veredito(nota);
 
-// "Mais julgamentos": primeiro os da mesma categoria, depois os mais recentes.
+// Todas as abas do post: a principal primeiro, depois as outras.
+const categoriasDoPost = [categoria, ...tambemEm.filter((c) => c !== categoria)];
+const emComum = (p: (typeof todos)[number]) =>
+  [p.data.categoria, ...p.data.tambemEm].filter((c) => categoriasDoPost.includes(c)).length;
+
+// "Leia também": primeiro os que dividem alguma aba com este post, depois os mais recentes.
 const relacionados = todos
   .filter((p) => p.id !== post.id)
-  .sort((a, b) => {
-    const mesma = Number(b.data.categoria === categoria) - Number(a.data.categoria === categoria);
-    return mesma || b.data.data.getTime() - a.data.data.getTime();
-  })
+  .sort((a, b) => emComum(b) - emComum(a) || b.data.data.getTime() - a.data.data.getTime())
   .slice(0, 3);
 ---
 
 <Base titulo={titulo} descricao={resumo}>
   <article>
     <header class="container-estreito topo-post">
-      <a href={`/?topico=${categoria}#feed`} class="chip">{rotulo(categorias, categoria)}</a>
+      <div class="chips">
+        {categoriasDoPost.map((c) => (
+          <a href={`/?topico=${c}#feed`} class="chip">{rotulo(categorias, c)}</a>
+        ))}
+      </div>
       <h1>{titulo}</h1>
       {resumo && <p class="lead">{resumo}</p>}
       <div class="meta">
@@ -80,6 +86,7 @@ const relacionados = todos
 
 <style>
   .topo-post { padding-top: 48px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip {
     display: inline-block;
     font-size: 0.9rem; font-weight: 600; text-transform: lowercase;
