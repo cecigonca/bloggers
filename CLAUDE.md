@@ -17,14 +17,14 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
 - Títulos e cabeçalhos com a primeira letra maiúscula ("É isso mesmo, a gente julga tudo.", "Leia também").
   Minúscula só em detalhes pequenos (links do menu, nome da categoria na capa do card).
 - Nota sempre como número + estrela + nome: "4★ · aprovado" (componentes `Veredito.astro` e `Estrela.astro`).
-  Vale pro site inteiro: cards, post, legenda, "Sobre nós" e opções do admin.
+  Vale pro site inteiro: cards, post, legenda, "Sobre nós" e opções do admin. No selo, o "4★" é maior que o nome, pra ser lido primeiro.
 
 ## Visual
 
 - Vibe: moderna, minimalista, simples, mas descontraída e cool.
 - Paleta: cinzas, cinza azulado e azul-marinho. Tokens em `src/styles/global.css` (`--marinho`, `--marinho-claro`,
   `--azul-cinza`, `--azul-cinza-claro`, `--cinza`, `--cinza-claro`, `--fundo`).
-  Única exceção: `--dourado`, usado **só na nota 5** (selo, estrela e régua da legenda). Não introduzir outras cores sem combinar com elas.
+  Única exceção: `--dourado` (#c08b1e), usado **só na nota 5**: selo dourado com letra branca, estrela do veredito final e régua da legenda (escolha da Cecília entre 5 opções testadas). Não introduzir outras cores sem combinar com elas.
 - Fontes (Google Fonts): **Bricolage Grotesque** nos títulos, **DM Sans** no texto.
 - Elementos marcantes: balões de conversa (chat do topo da home, logo, "..." nas capas dos cards), cards com cantos bem arredondados.
 - Abas de tópicos: faixa entre duas linhas, em CAIXA ALTA, a selecionada em pílula marinho, grudadas no topo ao rolar

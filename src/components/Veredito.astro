@@ -18,15 +18,22 @@ const tom = nota === 5 ? 'ouro' : nota === 4 ? 'alto' : nota === 3 ? 'medio' : '
 
 <style>
   .selo {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     font-size: 0.85rem;
     font-weight: 600;
-    padding: 5px 12px;
+    padding: 4px 12px 4px 10px;
     border-radius: 999px;
     white-space: nowrap;
   }
-  strong { display: inline-flex; align-items: center; gap: 2px; }
-  .ouro { background: var(--dourado); color: var(--marinho); }
+  /* O número e a estrela ficam maiores que o nome, pra nota ser a primeira coisa que o olho lê. */
+  strong {
+    display: inline-flex; align-items: center; gap: 2px;
+    font-family: var(--fonte-titulo); font-size: 1.5em; font-weight: 800;
+    letter-spacing: 0; text-transform: none; line-height: 1;
+  }
+  .ouro { background: var(--dourado); color: var(--branco); }
   .alto { background: var(--marinho); color: var(--branco); }
   .medio { background: var(--azul-cinza); color: var(--branco); }
   .baixo { background: var(--branco); color: var(--marinho); box-shadow: inset 0 0 0 1.5px var(--marinho); }
