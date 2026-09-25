@@ -1,0 +1,102 @@
+---
+// Card de um post no feed.
+import type { CollectionEntry } from 'astro:content';
+import Veredito from './Veredito.astro';
+import { categorias, autoras, rotulo, dataCurta } from '../lib/rotulos';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  variante?: number;
+  destaque?: boolean;
+}
+
+const { post, variante = 0, destaque = false } = Astro.props;
+const { titulo, resumo, capa, nota, categoria, autora, data } = post.data;
+const nomeCategoria = rotulo(categorias, categoria);
+---
+
+<a href={`/posts/${post.id}`} class:list={['card', `variante-${variante % 3}`, { destaque }]} data-categoria={categoria}>
+  <div class="capa">
+    {capa ? (
+      <img src={capa} alt="" loading="lazy" />
+    ) : (
+      <>
+        <span class="digitando" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="capa-texto">{nomeCategoria}</span>
+      </>
+    )}
+    <span class="selo-posicao"><Veredito nota={nota} /></span>
+  </div>
+  <div class="corpo">
+    {capa && <p class="sobrancelha">{nomeCategoria}</p>}
+    <h2>{titulo}</h2>
+    {resumo && <p class="resumo">{resumo}</p>}
+    <p class="meta">por {rotulo(autoras, autora)} · {dataCurta(data)}</p>
+  </div>
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--branco);
+    border-radius: var(--raio);
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgb(20 33 61 / 0.1); }
+  .card:hover h2 { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+  .capa {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--raio) var(--raio) 0 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+  }
+  .capa img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; border-radius: inherit;
+  }
+  .variante-0 .capa { --cor-capa: var(--marinho); color: var(--branco); }
+  .variante-1 .capa { --cor-capa: var(--azul-cinza-claro); color: var(--marinho); }
+  .variante-2 .capa { --cor-capa: var(--azul-cinza); color: var(--branco); }
+  .capa { background: var(--cor-capa); }
+
+  .capa-texto {
+    font-family: var(--fonte-titulo);
+    font-weight: 800;
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: lowercase;
+    margin-bottom: 18px;
+  }
+
+  /* "..." de alguém digitando, no canto da capa. */
+  .digitando {
+    position: absolute; top: 18px; right: 18px;
+    display: flex; gap: 4px; padding: 9px 11px;
+    border-radius: 14px 14px 14px 4px;
+    background: currentColor;
+  }
+  .digitando i { width: 6px; height: 6px; border-radius: 50%; background: var(--cor-capa); }
+
+  .selo-posicao { position: absolute; left: 16px; bottom: -14px; z-index: 1; }
+
+  .corpo { padding: 28px 22px 22px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  h2 { font-size: 1.4rem; }
+  .resumo { margin: 4px 0 0; color: var(--texto); }
+  .meta { margin: auto 0 0; padding-top: 12px; font-size: 0.85rem; color: var(--cinza); }
+
+  /* Card em destaque (o primeiro do feed): ocupa duas colunas. */
+  .destaque { grid-column: span 2; }
+  .destaque .capa { aspect-ratio: 16 / 7; }
+  .destaque .capa-texto { font-size: clamp(2.4rem, 6vw, 4.5rem); }
+  .destaque h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+  @media (max-width: 600px) {
+    .destaque { grid-column: span 1; }
+    .destaque .capa { aspect-ratio: 4 / 3; }
+  }
+</style>

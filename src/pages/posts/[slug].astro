@@ -1,0 +1,147 @@
+---
+// Página de um post.
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Veredito from '../../components/Veredito.astro';
+import CardPost from '../../components/CardPost.astro';
+import { categorias, autoras, rotulo, veredito, dataLonga } from '../../lib/rotulos';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, todos: posts } }));
+}
+
+const { post, todos } = Astro.props;
+const { titulo, resumo, capa, nota, categoria, autora, data, tags } = post.data;
+const { Content } = await render(post);
+const nomeAutora = rotulo(autoras, autora);
+const final = veredito(nota);
+
+// "Mais julgamentos": primeiro os da mesma categoria, depois os mais recentes.
+const relacionados = todos
+  .filter((p) => p.id !== post.id)
+  .sort((a, b) => {
+    const mesma = Number(b.data.categoria === categoria) - Number(a.data.categoria === categoria);
+    return mesma || b.data.data.getTime() - a.data.data.getTime();
+  })
+  .slice(0, 3);
+---
+
+<Base titulo={titulo} descricao={resumo}>
+  <article>
+    <header class="container-estreito topo-post">
+      <a href={`/?topico=${categoria}#feed`} class="chip">{rotulo(categorias, categoria)}</a>
+      <h1>{titulo}</h1>
+      {resumo && <p class="lead">{resumo}</p>}
+      <div class="meta">
+        <span class="avatar" aria-hidden="true">{nomeAutora.charAt(0)}</span>
+        <span>por <strong>{nomeAutora}</strong><br /><span class="data">{dataLonga(data)}</span></span>
+        <span class="meta-selo"><Veredito nota={nota} /></span>
+      </div>
+    </header>
+
+    {capa && <img src={capa} alt="" class="capa" />}
+
+    <div class="container-estreito prosa">
+      <Content />
+    </div>
+
+    <aside class="container-estreito">
+      <div class="veredito-final">
+        <p class="sobrancelha">veredito final</p>
+        <div class="veredito-linha">
+          <p class="nota-grande">{nota}<span>/5</span></p>
+          <div>
+            <p class="veredito-nome">{final.label}</p>
+            <p class="veredito-descricao">{final.descricao}</p>
+          </div>
+        </div>
+      </div>
+
+      {tags.length > 0 && (
+        <ul class="tags">
+          {tags.map((tag) => <li>#{tag}</li>)}
+        </ul>
+      )}
+    </aside>
+  </article>
+
+  {relacionados.length > 0 && (
+    <section class="container mais">
+      <h2>mais julgamentos</h2>
+      <div class="grade">
+        {relacionados.map((p, i) => <CardPost post={p} variante={i + 1} />)}
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .topo-post { padding-top: 48px; }
+  .chip {
+    display: inline-block;
+    font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    text-decoration: none; color: var(--marinho);
+    border: 1.5px solid var(--marinho); border-radius: 999px; padding: 5px 14px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .chip:hover { background: var(--marinho); color: var(--branco); }
+  h1 { font-size: clamp(2.3rem, 6vw, 3.8rem); font-weight: 800; margin: 20px 0 16px; }
+  .lead { font-size: 1.3rem; line-height: 1.45; color: var(--texto-suave); margin: 0 0 28px; }
+
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; line-height: 1.3; }
+  .avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--azul-cinza-claro); color: var(--marinho);
+    font-family: var(--fonte-titulo); font-weight: 800; font-size: 1.2rem;
+  }
+  .data { font-size: 0.9rem; color: var(--cinza); }
+  .meta-selo { margin-left: auto; }
+
+  .capa {
+    width: min(1100px, calc(100% - 32px));
+    margin: 40px auto 0;
+    border-radius: var(--raio);
+    max-height: 620px;
+    object-fit: cover;
+  }
+
+  .prosa { margin-top: 40px; font-size: 1.12rem; line-height: 1.75; }
+  .prosa :global(h2) { font-size: 1.9rem; margin: 2em 0 0.5em; }
+  .prosa :global(h3) { font-size: 1.4rem; margin: 1.6em 0 0.4em; }
+  .prosa :global(p) { margin: 0 0 1.2em; }
+  .prosa :global(a) { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .prosa :global(strong) { font-weight: 700; }
+  .prosa :global(ul), .prosa :global(ol) { padding-left: 1.3em; margin: 0 0 1.2em; }
+  .prosa :global(li) { margin-bottom: 0.3em; }
+  .prosa :global(li::marker) { color: var(--azul-cinza); }
+  .prosa :global(img) { border-radius: 12px; margin: 28px 0; }
+  .prosa :global(blockquote) {
+    margin: 32px 0; padding: 0 0 0 20px;
+    border-left: 4px solid var(--marinho);
+    font-family: var(--fonte-titulo); font-size: 1.5rem; line-height: 1.3; font-weight: 600;
+  }
+  .prosa :global(blockquote p) { margin: 0; }
+  .prosa :global(hr) { border: 0; border-top: 1.5px dashed var(--azul-cinza-claro); margin: 40px 0; }
+
+  .veredito-final {
+    margin-top: 48px;
+    background: var(--marinho);
+    color: var(--branco);
+    border-radius: var(--raio);
+    padding: 28px 32px;
+  }
+  .veredito-final .sobrancelha { color: var(--azul-cinza-claro); }
+  .veredito-linha { display: flex; align-items: center; gap: 24px; margin-top: 8px; }
+  .nota-grande { font-family: var(--fonte-titulo); font-weight: 800; font-size: 5rem; line-height: 1; margin: 0; }
+  .nota-grande span { font-size: 2rem; color: var(--azul-cinza-claro); }
+  .veredito-nome { font-family: var(--fonte-titulo); font-weight: 800; font-size: 2rem; margin: 0; text-transform: lowercase; }
+  .veredito-descricao { margin: 0; color: var(--azul-cinza-claro); }
+
+  .tags { list-style: none; padding: 0; margin: 24px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .tags li { background: var(--cinza-claro); border-radius: 999px; padding: 4px 14px; font-size: 0.9rem; color: var(--azul-cinza); font-weight: 600; }
+
+  .mais { margin-top: 96px; }
+  .mais h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 28px; }
+</style>

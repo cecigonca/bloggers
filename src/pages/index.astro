@@ -1,0 +1,182 @@
+---
+// Página inicial: chamada + abas de tópicos + feed com todos os posts.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CardPost from '../components/CardPost.astro';
+import { categorias } from '../lib/rotulos';
+
+const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime() - a.data.data.getTime());
+---
+
+<Base>
+  <section class="container hero">
+    <div class="hero-texto">
+      <p class="sobrancelha">do grupo do zap pro blog</p>
+      <h1>A gente julga tudo.<br /><span>Agora é oficial.</span></h1>
+      <p class="hero-sub">
+        Restaurante, série, rímel, aquele rolê de terça... Tudo que a gente já comentava só entre a gente,
+        agora aberto pra todo mundo. Porque todo mundo merece saber o que presta (e o que não presta).
+      </p>
+      <a href="#feed" class="botao">ver os julgamentos ↓</a>
+    </div>
+
+    <div class="chat" aria-hidden="true">
+      <p class="balao delas">gente, alguém já foi naquele restaurante novo?</p>
+      <p class="balao nosso">FUI. não vão.</p>
+      <p class="balao delas">mas e a sobremesa??</p>
+      <p class="balao nosso">a sobremesa salvou. nota 2 e é por ela</p>
+      <p class="balao delas digitando"><i></i><i></i><i></i></p>
+    </div>
+  </section>
+
+  <div id="feed" class="abas-faixa">
+    <div class="container">
+      <nav class="abas" aria-label="Filtrar posts por tópico">
+        <button type="button" data-topico="" aria-pressed="true">Tudo</button>
+        {categorias.map((c) => (
+          <button type="button" data-topico={c.value} aria-pressed="false">{c.label}</button>
+        ))}
+      </nav>
+    </div>
+  </div>
+
+  <section class="container feed">
+    <div class="grade" id="grade">
+      {posts.map((post, i) => <CardPost post={post} variante={i} destaque={i === 0} />)}
+    </div>
+    <p class="vazio" id="vazio" hidden={posts.length > 0}>
+      Nada por aqui ainda. A gente tá devendo esse julgamento.
+    </p>
+  </section>
+</Base>
+
+<script>
+  // Abas: mostra só os posts do tópico escolhido e guarda a escolha no link (?topico=...).
+  const botoes = document.querySelectorAll<HTMLButtonElement>('[data-topico]');
+  const cards = document.querySelectorAll<HTMLElement>('#grade > [data-categoria]');
+  const vazio = document.getElementById('vazio')!;
+
+  function filtrar(topico: string, atualizarLink = true) {
+    let primeiro = true;
+    cards.forEach((card) => {
+      const aparece = !topico || card.dataset.categoria === topico;
+      card.hidden = !aparece;
+      card.classList.toggle('destaque', aparece && primeiro);
+      if (aparece) primeiro = false;
+    });
+    vazio.hidden = !primeiro;
+    botoes.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.topico === topico)));
+
+    if (atualizarLink) {
+      const url = new URL(location.href);
+      if (topico) url.searchParams.set('topico', topico);
+      else url.searchParams.delete('topico');
+      history.replaceState(null, '', url);
+    }
+  }
+
+  const feed = document.getElementById('feed')!;
+  botoes.forEach((b) =>
+    b.addEventListener('click', () => {
+      const abasGrudadas = feed.getBoundingClientRect().top <= 68;
+      filtrar(b.dataset.topico ?? '');
+      // Se a pessoa já estava rolando o feed, mantém o começo do feed na tela.
+      if (abasGrudadas) feed.scrollIntoView({ block: 'start' });
+    })
+  );
+
+  const inicial = new URLSearchParams(location.search).get('topico');
+  if (inicial) filtrar(inicial, false);
+</script>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 48px;
+    align-items: center;
+    padding-top: 56px;
+    padding-bottom: 72px;
+  }
+  .hero h1 { font-size: clamp(2.8rem, 7vw, 5.4rem); font-weight: 800; margin: 14px 0 20px; }
+  .hero h1 span { color: var(--azul-cinza); }
+  .hero-sub { font-size: 1.15rem; color: var(--texto-suave); max-width: 34em; margin: 0 0 28px; }
+
+  /* Conversinha de grupo, com os balões aparecendo um por um. */
+  .chat {
+    background: var(--branco);
+    border-radius: 28px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 20px 50px rgb(20 33 61 / 0.08);
+    transform: rotate(1.5deg);
+  }
+  .balao {
+    margin: 0;
+    max-width: 80%;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 1rem;
+    line-height: 1.35;
+    animation: aparecer 0.4s ease-out both;
+  }
+  .delas { align-self: flex-start; background: var(--cinza-claro); border-bottom-left-radius: 6px; }
+  .nosso { align-self: flex-end; background: var(--marinho); color: var(--branco); border-bottom-right-radius: 6px; font-weight: 600; }
+  .balao:nth-child(2) { animation-delay: 0.5s; }
+  .balao:nth-child(3) { animation-delay: 1s; }
+  .balao:nth-child(4) { animation-delay: 1.5s; }
+  .balao:nth-child(5) { animation-delay: 2s; }
+  .digitando { display: flex; gap: 5px; padding: 14px 16px; }
+  .digitando i { width: 8px; height: 8px; border-radius: 50%; background: var(--cinza); animation: pulinho 1.2s infinite; }
+  .digitando i:nth-child(2) { animation-delay: 0.15s; }
+  .digitando i:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes aparecer { from { opacity: 0; transform: translateY(8px) scale(0.96); } }
+  @keyframes pulinho { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+  @media (prefers-reduced-motion: reduce) { .balao, .digitando i { animation: none; } }
+
+  @media (max-width: 800px) {
+    .hero { grid-template-columns: 1fr; padding-top: 32px; gap: 36px; }
+  }
+
+  /* Abas de tópicos: faixa entre duas linhas, que gruda no topo ao rolar. */
+  .abas-faixa {
+    position: sticky;
+    top: 68px;
+    z-index: 10;
+    background: var(--fundo);
+    scroll-margin-top: 68px;
+  }
+  .abas {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-top: 1.5px solid var(--marinho);
+    border-bottom: 1.5px solid var(--marinho);
+    padding: 12px 0;
+  }
+  .abas::-webkit-scrollbar { display: none; }
+  .abas button {
+    flex: none;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--marinho);
+    background: none;
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .abas button:hover { background: var(--cinza-claro); }
+  .abas button[aria-pressed='true'] { background: var(--marinho); color: var(--branco); }
+
+  .feed { padding-top: 36px; }
+  .vazio { text-align: center; color: var(--texto-suave); font-size: 1.1rem; padding: 60px 0; margin: 0; }
+</style>
