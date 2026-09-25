@@ -38,10 +38,15 @@ export default config({
           },
         }),
         categoria: fields.select({
-          label: 'Categoria',
-          description: 'Em qual aba do feed esse post vai aparecer.',
+          label: 'Categoria principal',
+          description: 'A aba principal do post. É o nome que aparece na capa do card.',
           options: categorias,
           defaultValue: 'aleatorio',
+        }),
+        tambemEm: fields.multiselect({
+          label: 'Também aparece em',
+          description: 'Opcional. Marque outras abas onde o post deve aparecer (ex.: Trending).',
+          options: categorias,
         }),
         nota: fields.select({
           label: 'Veredito',

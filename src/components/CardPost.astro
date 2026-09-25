@@ -13,11 +13,13 @@ interface Props {
 }
 
 const { post, formato = 'pequeno', cor = 'marinho' } = Astro.props;
-const { titulo, resumo, capa, nota, categoria, autora, data } = post.data;
+const { titulo, resumo, capa, nota, categoria, tambemEm, autora, data } = post.data;
 const nomeCategoria = rotulo(categorias, categoria);
+// Todas as abas em que o post aparece, separadas por espaço (usado pelo filtro do feed).
+const todasCategorias = [categoria, ...tambemEm.filter((c) => c !== categoria)].join(' ');
 ---
 
-<a href={`/posts/${post.id}`} class="card" data-categoria={categoria} data-formato={formato} data-cor={cor}>
+<a href={`/posts/${post.id}`} class="card" data-categorias={todasCategorias} data-formato={formato} data-cor={cor}>
   <div class="capa">
     {capa ? (
       <img src={capa} alt="" loading="lazy" />

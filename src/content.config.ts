@@ -11,6 +11,7 @@ const posts = defineCollection({
     capa: z.string().nullable().optional(),
     nota: z.coerce.number().min(1).max(5),
     categoria: z.string(),
+    tambemEm: z.array(z.string()).default([]),
     autora: z.string(),
     data: z.coerce.date(),
     tags: z.array(z.string()).default([]),

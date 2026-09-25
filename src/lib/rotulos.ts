@@ -3,6 +3,7 @@
 // `label` é o que aparece para as pessoas.
 
 export const categorias = [
+  { value: 'trending', label: 'Trending' },
   { value: 'comida', label: 'Comes & bebes' },
   { value: 'telinha', label: 'Filmes & séries' },
   { value: 'beleza', label: 'Beleza' },
