@@ -1,5 +1,5 @@
 ---
-// Selinho com a nota e o veredito, tipo um adesivo: "4/5 · Aprovado".
+// Selinho com a nota e o veredito: "4/5 · aprovado".
 import { veredito } from '../lib/rotulos';
 
 interface Props {
@@ -12,23 +12,19 @@ const tom = nota >= 4 ? 'alto' : nota === 3 ? 'medio' : 'baixo';
 ---
 
 <span class:list={['selo', tom]}>
-  <strong>{nota}/5</strong> · {label}
+  <strong>{nota}/5</strong> · {label.toLowerCase()}
 </span>
 
 <style>
   .selo {
     display: inline-block;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 5px 12px;
     border-radius: 999px;
-    transform: rotate(-3deg);
     white-space: nowrap;
-    box-shadow: 0 2px 0 rgb(20 33 61 / 0.15);
   }
   .alto { background: var(--marinho); color: var(--branco); }
   .medio { background: var(--azul-cinza); color: var(--branco); }
-  .baixo { background: var(--branco); color: var(--marinho); border: 2px solid var(--marinho); }
+  .baixo { background: var(--branco); color: var(--marinho); box-shadow: inset 0 0 0 1.5px var(--marinho); }
 </style>

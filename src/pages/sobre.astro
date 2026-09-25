@@ -10,7 +10,7 @@ import { notas } from '../lib/rotulos';
 const reader = createReader(process.cwd(), keystaticConfig);
 const sobre = await reader.singletons.sobre.read();
 
-const chamada = sobre?.chamada || 'A gente é chata. Com carinho.';
+const chamada = sobre?.chamada || 'basicamente duas amigas com opinião sobre tudo';
 const paragrafos = (sobre?.texto ?? '').split(/\n\s*\n/).filter(Boolean);
 const pessoas = sobre?.pessoas ?? [];
 ---
@@ -65,8 +65,6 @@ const pessoas = sobre?.pessoas ?? [];
     margin-top: 48px;
   }
   .pessoa { background: var(--branco); border-radius: var(--raio); padding: 28px; }
-  .pessoa-0 { transform: rotate(-1deg); }
-  .pessoa-1 { transform: rotate(1deg); }
   .foto { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; }
   .foto-inicial {
     display: grid; place-items: center;

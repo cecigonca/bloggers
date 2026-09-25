@@ -1,102 +1,135 @@
 ---
-// Card de um post no feed.
+// Card de um post no feed. O tamanho (formato) e a cor vêm de src/lib/feed.ts.
 import type { CollectionEntry } from 'astro:content';
-import Veredito from './Veredito.astro';
-import { categorias, autoras, rotulo, dataCurta } from '../lib/rotulos';
+import { categorias, autoras, rotulo, veredito, dataCurta } from '../lib/rotulos';
+import type { Formato } from '../lib/feed';
 
 interface Props {
   post: CollectionEntry<'posts'>;
-  variante?: number;
-  destaque?: boolean;
+  formato?: Formato;
+  cor?: string;
 }
 
-const { post, variante = 0, destaque = false } = Astro.props;
+const { post, formato = 'pequeno', cor = 'branco' } = Astro.props;
 const { titulo, resumo, capa, nota, categoria, autora, data } = post.data;
-const nomeCategoria = rotulo(categorias, categoria);
 ---
 
-<a href={`/posts/${post.id}`} class:list={['card', `variante-${variante % 3}`, { destaque }]} data-categoria={categoria}>
-  <div class="capa">
-    {capa ? (
-      <img src={capa} alt="" loading="lazy" />
-    ) : (
-      <>
-        <span class="digitando" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span class="capa-texto">{nomeCategoria}</span>
-      </>
-    )}
-    <span class="selo-posicao"><Veredito nota={nota} /></span>
+<a
+  href={`/posts/${post.id}`}
+  class="card"
+  data-categoria={categoria}
+  data-formato={formato}
+  data-cor={cor}
+  data-foto={capa ? 'sim' : undefined}
+>
+  {capa && <img src={capa} alt="" loading="lazy" class="foto" />}
+
+  <div class="topo-card">
+    <span class="categoria">{rotulo(categorias, categoria)}</span>
+    <span class="nota">{nota}/5 · {veredito(nota).label.toLowerCase()}</span>
   </div>
-  <div class="corpo">
-    {capa && <p class="sobrancelha">{nomeCategoria}</p>}
+
+  {!capa && resumo && <p class="balao">{resumo}</p>}
+
+  <div class="rodape-card">
     <h2>{titulo}</h2>
-    {resumo && <p class="resumo">{resumo}</p>}
     <p class="meta">por {rotulo(autoras, autora)} · {dataCurta(data)}</p>
   </div>
 </a>
 
 <style>
   .card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    background: var(--branco);
+    gap: 14px;
+    padding: 20px;
     border-radius: var(--raio);
+    overflow: hidden;
     text-decoration: none;
+    background: var(--cor-fundo);
+    color: var(--cor-texto);
     transition: transform 0.2s, box-shadow 0.2s;
   }
-  .card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgb(20 33 61 / 0.1); }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgb(20 33 61 / 0.12); }
   .card:hover h2 { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
-  .capa {
-    position: relative;
-    aspect-ratio: 4 / 3;
-    border-radius: var(--raio) var(--raio) 0 0;
-    display: flex;
-    align-items: flex-end;
-    padding: 20px;
+  /* Cores de cada card */
+  [data-cor='marinho'] {
+    --cor-fundo: var(--marinho); --cor-texto: var(--branco); --cor-suave: var(--azul-cinza-claro);
+    --cor-balao: var(--branco); --cor-balao-texto: var(--marinho);
+    --cor-nota: var(--branco); --cor-nota-texto: var(--marinho);
   }
-  .capa img {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; border-radius: inherit;
+  [data-cor='claro'] {
+    --cor-fundo: var(--azul-cinza-claro); --cor-texto: var(--marinho); --cor-suave: var(--azul-cinza);
+    --cor-balao: var(--marinho); --cor-balao-texto: var(--branco);
+    --cor-nota: var(--marinho); --cor-nota-texto: var(--branco);
   }
-  .variante-0 .capa { --cor-capa: var(--marinho); color: var(--branco); }
-  .variante-1 .capa { --cor-capa: var(--azul-cinza-claro); color: var(--marinho); }
-  .variante-2 .capa { --cor-capa: var(--azul-cinza); color: var(--branco); }
-  .capa { background: var(--cor-capa); }
-
-  .capa-texto {
-    font-family: var(--fonte-titulo);
-    font-weight: 800;
-    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
-    line-height: 0.95;
-    letter-spacing: -0.03em;
-    text-transform: lowercase;
-    margin-bottom: 18px;
+  [data-cor='branco'] {
+    --cor-fundo: var(--branco); --cor-texto: var(--marinho); --cor-suave: var(--cinza);
+    --cor-balao: var(--cinza-claro); --cor-balao-texto: var(--marinho);
+    --cor-nota: var(--marinho); --cor-nota-texto: var(--branco);
+  }
+  [data-cor='azul'] {
+    --cor-fundo: var(--azul-cinza); --cor-texto: var(--branco); --cor-suave: var(--cinza-claro);
+    --cor-balao: var(--branco); --cor-balao-texto: var(--marinho);
+    --cor-nota: var(--marinho); --cor-nota-texto: var(--branco);
+  }
+  /* Com foto: a foto ocupa o card todo e o texto fica branco por cima. */
+  [data-foto] {
+    --cor-texto: var(--branco); --cor-suave: var(--cinza-claro);
+    --cor-nota: var(--branco); --cor-nota-texto: var(--marinho);
   }
 
-  /* "..." de alguém digitando, no canto da capa. */
-  .digitando {
-    position: absolute; top: 18px; right: 18px;
-    display: flex; gap: 4px; padding: 9px 11px;
-    border-radius: 14px 14px 14px 4px;
-    background: currentColor;
+  .foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+  [data-foto]::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgb(20 33 61 / 0.88), rgb(20 33 61 / 0.1) 65%);
   }
-  .digitando i { width: 6px; height: 6px; border-radius: 50%; background: var(--cor-capa); }
+  .card:hover .foto { transform: scale(1.04); }
+  .topo-card, .balao, .rodape-card { position: relative; z-index: 1; }
 
-  .selo-posicao { position: absolute; left: 16px; bottom: -14px; z-index: 1; }
-
-  .corpo { padding: 28px 22px 22px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
-  h2 { font-size: 1.4rem; }
-  .resumo { margin: 4px 0 0; color: var(--texto); }
-  .meta { margin: auto 0 0; padding-top: 12px; font-size: 0.85rem; color: var(--cinza); }
-
-  /* Card em destaque (o primeiro do feed): ocupa duas colunas. */
-  .destaque { grid-column: span 2; }
-  .destaque .capa { aspect-ratio: 16 / 7; }
-  .destaque .capa-texto { font-size: clamp(2.4rem, 6vw, 4.5rem); }
-  .destaque h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
-  @media (max-width: 600px) {
-    .destaque { grid-column: span 1; }
-    .destaque .capa { aspect-ratio: 4 / 3; }
+  .topo-card { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .categoria { font-size: 0.85rem; font-weight: 600; color: var(--cor-suave); text-transform: lowercase; }
+  .nota {
+    font-size: 0.78rem; font-weight: 700; white-space: nowrap;
+    background: var(--cor-nota); color: var(--cor-nota-texto);
+    padding: 4px 10px; border-radius: 999px;
   }
+
+  /* A "fofoca em uma frase" vira um balão de chat. */
+  .balao {
+    align-self: flex-start;
+    margin: auto 0;
+    max-width: 92%;
+    background: var(--cor-balao);
+    color: var(--cor-balao-texto);
+    padding: 12px 16px;
+    border-radius: 20px 20px 20px 6px;
+    font-size: 1.02rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+
+  .rodape-card { margin-top: auto; }
+  h2 {
+    font-size: 1.25rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+  .meta { margin: 8px 0 0; font-size: 0.85rem; color: var(--cor-suave); }
+
+  /* Ajustes por tamanho */
+  [data-formato='pequeno'] .balao { display: none; }
+  [data-formato='grande'] { padding: 28px; }
+  [data-formato='grande'] h2 { font-size: clamp(1.6rem, 2.6vw, 2.3rem); }
+  [data-formato='grande'] .balao { font-size: clamp(1.15rem, 1.8vw, 1.45rem); -webkit-line-clamp: 5; max-width: 80%; }
+  [data-formato='alto'] .balao { -webkit-line-clamp: 7; }
+  [data-formato='largo'] h2 { font-size: 1.5rem; -webkit-line-clamp: 2; }
+  [data-formato='largo'] .balao { -webkit-line-clamp: 2; max-width: 75%; }
 </style>

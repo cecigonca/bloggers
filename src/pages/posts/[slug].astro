@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import Veredito from '../../components/Veredito.astro';
 import CardPost from '../../components/CardPost.astro';
 import { categorias, autoras, rotulo, veredito, dataLonga } from '../../lib/rotulos';
+import { corDoCard } from '../../lib/feed';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -68,9 +69,9 @@ const relacionados = todos
 
   {relacionados.length > 0 && (
     <section class="container mais">
-      <h2>mais julgamentos</h2>
-      <div class="grade">
-        {relacionados.map((p, i) => <CardPost post={p} variante={i + 1} />)}
+      <h2>leia também</h2>
+      <div class="trio">
+        {relacionados.map((p, i) => <CardPost post={p} cor={corDoCard(i + 1)} />)}
       </div>
     </section>
   )}
@@ -80,7 +81,7 @@ const relacionados = todos
   .topo-post { padding-top: 48px; }
   .chip {
     display: inline-block;
-    font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    font-size: 0.9rem; font-weight: 600; text-transform: lowercase;
     text-decoration: none; color: var(--marinho);
     border: 1.5px solid var(--marinho); border-radius: 999px; padding: 5px 14px;
     transition: background 0.15s, color 0.15s;
