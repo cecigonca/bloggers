@@ -40,6 +40,8 @@ const posts = defineCollection({
     resumindo: z.string().optional(),
     tags: z.array(z.string()).default([]),
     data: z.coerce.date(),
+    esconderData: z.boolean().default(false),
+    esconderAutoria: z.boolean().default(false),
   }),
 });
 

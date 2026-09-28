@@ -14,8 +14,10 @@ interface Props {
 }
 
 const { post, formato = 'pequeno', cor = 'marinho' } = Astro.props;
-const { titulo, resumo, capa, categoria, tambemEm, data } = post.data;
+const { titulo, resumo, capa, categoria, tambemEm, data, esconderData, esconderAutoria } = post.data;
 const opiniao = lerOpiniao(post.data.opiniao);
+// Linha de baixo do card: "por Cecília · 22 set", sem o que a pessoa escolheu esconder.
+const meta = [!esconderAutoria && `por ${opiniao.nome}`, !esconderData && dataCurta(data)].filter(Boolean).join(' · ');
 const nomeCategoria = rotulo(categorias, categoria);
 // Todas as abas em que o post aparece, separadas por espaço (usado pelo filtro do feed).
 const todasCategorias = [categoria, ...tambemEm.filter((c) => c !== categoria)].join(' ');
@@ -41,7 +43,7 @@ const todasCategorias = [categoria, ...tambemEm.filter((c) => c !== categoria)].
     {capa && <p class="sobrancelha">{nomeCategoria}</p>}
     <h2>{titulo}</h2>
     {resumo && <p class="resumo">{resumo}</p>}
-    <p class="meta">por {opiniao.nome} · {dataCurta(data)}</p>
+    {meta && <p class="meta">{meta}</p>}
   </div>
 </a>
 

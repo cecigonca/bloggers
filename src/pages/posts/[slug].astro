@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { post, todos } = Astro.props;
-const { titulo, resumo, capa, categoria, tambemEm, spoiler, positivo, negativo, ficha, resumindo, data, tags } = post.data;
+const { titulo, resumo, capa, categoria, tambemEm, spoiler, positivo, negativo, ficha, resumindo, data, tags, esconderData, esconderAutoria } = post.data;
 const galeria = post.data.galeria.filter((g) => g.foto);
 const opiniao = lerOpiniao(post.data.opiniao);
 const temTexto = Boolean(post.body?.trim());
@@ -46,15 +46,21 @@ const relacionados = todos
       <h1>{titulo}</h1>
       {resumo && <p class="lead">{resumo}</p>}
 
-      <div class="meta">
-        {opiniao.divididas ? (
+      <div class:list={['meta', { 'so-nota': esconderAutoria && esconderData }]}>
+        {!esconderAutoria && (opiniao.divididas ? (
           <span class="avatares" aria-hidden="true">
             {opiniao.votos.map((v, i) => <span class:list={['avatar', `avatar-${i}`]}>{v.nome.charAt(0)}</span>)}
           </span>
         ) : (
           <span class="avatar" aria-hidden="true">{opiniao.quem === 'chatinhas' ? <Logo /> : opiniao.nome.charAt(0)}</span>
+        ))}
+        {(!esconderAutoria || !esconderData) && (
+          <span>
+            {!esconderAutoria && <>por <strong>{opiniao.nome}</strong></>}
+            {!esconderAutoria && !esconderData && <br />}
+            {!esconderData && <span class="data">{dataLonga(data)}</span>}
+          </span>
         )}
-        <span>por <strong>{opiniao.nome}</strong><br /><span class="data">{dataLonga(data)}</span></span>
         <button type="button" class="meta-selo" data-abrir-legenda title="O que é cada nota?">
           {opiniao.divididas
             ? opiniao.votos.map((v) => <Veredito nota={v.nota} quem={v.nome} />)
@@ -215,6 +221,7 @@ const relacionados = todos
     font: inherit; background: none; border: 0; padding: 0; cursor: pointer; color: var(--azul-cinza);
   }
   .meta-selo:hover { color: var(--marinho); }
+  .so-nota .meta-selo { margin-left: 0; }
   .interrogacao {
     width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
     border: 1.5px solid currentColor; font-size: 0.75rem; font-weight: 700;

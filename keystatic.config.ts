@@ -163,9 +163,19 @@ export default config({
         }),
         data: fields.date({
           label: 'Data',
-          description: 'Já vem com a data de hoje.',
+          description: 'Já vem com a data de hoje. Mesmo escondida, é ela que define a ordem do feed.',
           defaultValue: { kind: 'today' },
           validation: { isRequired: true },
+        }),
+        esconderData: fields.checkbox({
+          label: 'Esconder a data',
+          description: 'Marcado, a data não aparece no card nem no post.',
+          defaultValue: false,
+        }),
+        esconderAutoria: fields.checkbox({
+          label: 'Esconder quem escreveu',
+          description: 'Marcado, o "por ..." não aparece no card nem no post. A nota continua aparecendo.',
+          defaultValue: false,
         }),
         conteudo: fields.markdoc({
           label: 'Texto (opcional)',
