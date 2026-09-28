@@ -52,6 +52,16 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
 - **Página "Sobre nós":** editável pelo admin (singleton `sobre`), salva em `src/data/sobre.yaml`, lida com o reader do Keystatic.
 - **Imagens:** `public/images/posts/` e `public/images/sobre/`.
 - **Filtro por tópico na home:** feito no navegador (JS em `src/pages/index.astro`) e guardado no link como `?topico=...`.
+- **Estrutura do post** (decidida com as duas via protótipo): tudo numa coluna só de 880px (título, capa, blocos, ficha, texto, galeria, veredito com as mesmas bordas).
+  Ordem: voltar pro feed → chips → título → fofoca → quem/nota → aviso de spoiler → capa → blocos **Positivo / Negativo**
+  (dois quadros brancos de mesmo peso, "+" e "−") → **ficha rápida** (faixa entre duas linhas, SEM fundo, pra não parecer com os blocos)
+  → texto livre (opcional, sem título) → galeria → veredito final → tags → leia também.
+  Rejeitado: "O que presta / o que não presta", "o textão" como título, opiniões divididas numa seção no meio do post, foto mais larga que o resto.
+- **De quem é a opinião:** campo `opiniao` (conditional do Keystatic, salvo como `{ discriminant, value }`): `cecilia` | `amiga` | `chatinhas` (as duas concordam) com `nota`,
+  ou `divididas` com `notaCecilia`, `opiniaoCecilia`, `notaAmiga`, `opiniaoAmiga`. Lido por `src/lib/opiniao.ts`.
+  Divididas: dois selos compactos ("C 3★ · A 4★") no card e no topo; o veredito final vira um placar dividido ao meio + "resumindo".
+- **Fotos no meio do texto:** o "title" da imagem no editor vira legenda (`markdoc.config.mjs` → `src/components/FotoNoTexto.astro`).
+- **Voltar pro feed:** volta pra aba de onde a pessoa veio (lê o `document.referrer`).
 - **Post em mais de uma aba:** campo `categoria` (principal, vai na capa do card) + `tambemEm` (lista de outras abas, ex.: `trending`). O card leva todas em `data-categorias`; na página do post viram chips clicáveis.
 - **Hospedagem planejada:** Vercel (adapter `@astrojs/vercel` já instalado).
 - **Storage do Keystatic:** `local` por enquanto. Na etapa de ir pro ar, trocar para `github` (repo `cecigonca/bloggers`) e configurar o GitHub App do Keystatic.
@@ -73,9 +83,10 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
 1. ✅ Base: projeto rodando local, formulário funcionando.
 2. ✅ Visual v1: paleta, fontes, home com topo, abas e feed, página de post, "Sobre nós", formulário com textos explicativos.
 3. ✅ v1.x: textos menos bregas, chat novo, feed em mosaico com cards da v0, legenda das notas em régua, nota com estrela, 5★ dourado.
-4. ⏳ Ajustes finos com elas (tópicos, textos, nome, fotos).
-5. ⏳ No ar: Vercel + Keystatic em modo GitHub + acesso para as duas + domínio.
-6. ⏳ Extras: busca, comentários, compartilhar no WhatsApp, newsletter.
+4. ✅ Post com seções (formulário + página), opinião de quem, spoiler, galeria, voltar pro feed.
+5. ⏳ Ajustes finos com elas (tópicos, textos, nome, fotos).
+6. ⏳ No ar: Vercel + Keystatic em modo GitHub + acesso para as duas + domínio.
+7. ⏳ Extras: busca, comentários, compartilhar no WhatsApp, newsletter.
 
 ## Convenções
 

@@ -1,19 +1,24 @@
 ---
 // Selinho com a nota e o veredito: "4★ · aprovado".
+// Com `quem`, vira a versão curtinha usada quando as duas discordam: "C 4★".
 import Estrela from './Estrela.astro';
 import { veredito } from '../lib/rotulos';
 
 interface Props {
   nota: number;
+  quem?: string;
 }
 
-const { nota } = Astro.props;
+const { nota, quem } = Astro.props;
 const { label } = veredito(nota);
 const tom = nota === 5 ? 'ouro' : nota === 4 ? 'alto' : nota === 3 ? 'medio' : 'baixo';
+const descricao = quem ? `${quem}: nota ${nota} de 5, ${label}` : `Nota ${nota} de 5: ${label}`;
 ---
 
-<span class:list={['selo', tom]} aria-label={`Nota ${nota} de 5: ${label}`}>
-  <strong>{nota}<Estrela /></strong> · {label.toLowerCase()}
+<span class:list={['selo', tom]} aria-label={descricao}>
+  {quem && <span class="quem">{quem.charAt(0)}</span>}
+  <strong>{nota}<Estrela /></strong>
+  {!quem && <> · {label.toLowerCase()}</>}
 </span>
 
 <style>
@@ -33,6 +38,7 @@ const tom = nota === 5 ? 'ouro' : nota === 4 ? 'alto' : nota === 3 ? 'medio' : '
     font-family: var(--fonte-titulo); font-size: 1.5em; font-weight: 800;
     letter-spacing: 0; text-transform: none; line-height: 1;
   }
+  .quem { font-weight: 800; opacity: 0.75; margin-right: 2px; }
   .ouro { background: var(--dourado); color: var(--branco); }
   .alto { background: var(--marinho); color: var(--branco); }
   .medio { background: var(--azul-cinza); color: var(--branco); }

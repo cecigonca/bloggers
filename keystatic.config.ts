@@ -3,7 +3,7 @@
 // Se mudar algum campo de post aqui, lembre de mudar também em src/content.config.ts.
 import { createElement as h } from 'react';
 import { config, fields, collection, singleton } from '@keystatic/core';
-import { categorias, notas, autoras } from './src/lib/rotulos';
+import { categorias, notas } from './src/lib/rotulos';
 
 // O balãozinho do logo do blog, no canto do admin.
 function Logo({ colorScheme }: { colorScheme: 'light' | 'dark' }) {
@@ -17,6 +17,15 @@ function Logo({ colorScheme }: { colorScheme: 'light' | 'dark' }) {
     h('circle', { cx: 16, cy: 14.5, r: 1.8, fill: pontos }),
     h('circle', { cx: 21.5, cy: 14.5, r: 1.8, fill: pontos })
   );
+}
+
+// Campo de nota (1★ a 5★), usado em mais de um lugar do formulário.
+function campoNota(label: string) {
+  return fields.select({
+    label,
+    options: notas.map((n) => ({ value: n.value, label: `${n.value}★ · ${n.label} (${n.descricao})` })),
+    defaultValue: '3',
+  });
 }
 
 export default config({
@@ -43,7 +52,7 @@ export default config({
       entryLayout: 'content',
       format: { contentField: 'conteudo' },
       // Colunas da lista de posts.
-      columns: ['titulo', 'categoria', 'nota', 'data'],
+      columns: ['titulo', 'categoria', 'data'],
       // Botão "ver" no formulário, que abre o post no site.
       previewUrl: '/posts/{slug}',
       schema: {
@@ -69,15 +78,38 @@ export default config({
           description: 'Opcional. Marque outras abas onde o post deve aparecer (ex.: Trending).',
           options: categorias,
         }),
-        nota: fields.select({
-          label: 'Veredito',
-          description: 'O que vocês acharam, no fim das contas?',
-          options: notas.map((n) => ({ value: n.value, label: `${n.value}★ · ${n.label} (${n.descricao})` })),
-          defaultValue: '3',
+        // De quem é a opinião. Quando "cada uma acha uma coisa", aparecem nota e frase de cada uma.
+        opiniao: fields.conditional(
+          fields.select({
+            label: 'De quem é a opinião?',
+            options: [
+              { label: 'Só da Cecília', value: 'cecilia' },
+              { label: 'Só da Amiga', value: 'amiga' },
+              { label: 'Das duas (a gente concorda)', value: 'chatinhas' },
+              { label: 'Cada uma acha uma coisa', value: 'divididas' },
+            ],
+            defaultValue: 'chatinhas',
+          }),
+          {
+            cecilia: fields.object({ nota: campoNota('Veredito') }),
+            amiga: fields.object({ nota: campoNota('Veredito') }),
+            chatinhas: fields.object({ nota: campoNota('Veredito') }),
+            divididas: fields.object({
+              notaCecilia: campoNota('Nota da Cecília'),
+              opiniaoCecilia: fields.text({ label: 'O que a Cecília achou', description: 'Uma ou duas frases.', multiline: true }),
+              notaAmiga: campoNota('Nota da Amiga'),
+              opiniaoAmiga: fields.text({ label: 'O que a Amiga achou', description: 'Uma ou duas frases.', multiline: true }),
+            }),
+          }
+        ),
+        spoiler: fields.checkbox({
+          label: 'Tem spoiler?',
+          description: 'Marcado, o post mostra um aviso antes da foto e dos blocos.',
+          defaultValue: false,
         }),
         resumo: fields.text({
           label: 'A fofoca em uma frase',
-          description: 'Aparece no card do feed. Uma ou duas frases, curtinho.',
+          description: 'Aparece no card do feed e embaixo do título. Uma ou duas frases, curtinho.',
           multiline: true,
         }),
         capa: fields.image({
@@ -86,15 +118,48 @@ export default config({
           directory: 'public/images/posts',
           publicPath: '/images/posts/',
         }),
+        positivo: fields.array(fields.text({ label: 'Item' }), {
+          label: 'Positivo',
+          description: 'O que tem de bom. Um item por linha, curtinho.',
+          itemLabel: (props) => props.value || 'item novo',
+        }),
+        negativo: fields.array(fields.text({ label: 'Item' }), {
+          label: 'Negativo',
+          description: 'O que não rolou. Um item por linha, curtinho.',
+          itemLabel: (props) => props.value || 'item novo',
+        }),
+        ficha: fields.array(
+          fields.object({
+            rotulo: fields.text({ label: 'Nome', description: 'Ex.: Onde assistir, Onde fica, Preço' }),
+            valor: fields.text({ label: 'Informação', description: 'Ex.: Netflix, Pinheiros, R$ 39,90' }),
+          }),
+          {
+            label: 'Ficha rápida',
+            description:
+              'Opcional. Informações curtas. Ideias: série → onde assistir, gênero · restaurante → onde fica, quanto custa, precisa reservar? · produto → onde comprar, preço, compraria de novo? · rolê → onde, quanto, melhor dia.',
+            itemLabel: (props) => [props.fields.rotulo.value, props.fields.valor.value].filter(Boolean).join(': ') || 'linha nova',
+          }
+        ),
+        galeria: fields.array(
+          fields.object({
+            foto: fields.image({ label: 'Foto', directory: 'public/images/posts', publicPath: '/images/posts/' }),
+            legenda: fields.text({ label: 'Legenda (opcional)' }),
+          }),
+          {
+            label: 'Galeria',
+            description: 'Opcional. Fotos que aparecem juntas depois do texto. A primeira fica maior.',
+            itemLabel: (props) => props.fields.legenda.value || 'foto',
+          }
+        ),
+        resumindo: fields.text({
+          label: 'Resumindo',
+          description: 'Uma frase final. Aparece no quadro do veredito.',
+          multiline: true,
+        }),
         tags: fields.array(fields.text({ label: 'Tag' }), {
           label: 'Tags',
           description: 'Palavrinhas soltas sobre o post, tipo "barato" ou "date".',
           itemLabel: (props) => props.value,
-        }),
-        autora: fields.select({
-          label: 'Quem escreveu',
-          options: autoras,
-          defaultValue: 'cecilia',
         }),
         data: fields.date({
           label: 'Data',
@@ -103,7 +168,8 @@ export default config({
           validation: { isRequired: true },
         }),
         conteudo: fields.markdoc({
-          label: 'Texto',
+          label: 'Texto (opcional)',
+          description: 'Pra quando quiser escrever mais. Dá pra colocar foto no meio pelo botão de imagem da barra.',
           options: {
             image: {
               directory: 'public/images/posts',

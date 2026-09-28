@@ -3,7 +3,8 @@
 // O tamanho (formato) e a cor vêm de src/lib/feed.ts.
 import type { CollectionEntry } from 'astro:content';
 import Veredito from './Veredito.astro';
-import { categorias, autoras, rotulo, dataCurta } from '../lib/rotulos';
+import { categorias, rotulo, dataCurta } from '../lib/rotulos';
+import { lerOpiniao } from '../lib/opiniao';
 import type { Formato } from '../lib/feed';
 
 interface Props {
@@ -13,7 +14,8 @@ interface Props {
 }
 
 const { post, formato = 'pequeno', cor = 'marinho' } = Astro.props;
-const { titulo, resumo, capa, nota, categoria, tambemEm, autora, data } = post.data;
+const { titulo, resumo, capa, categoria, tambemEm, data } = post.data;
+const opiniao = lerOpiniao(post.data.opiniao);
 const nomeCategoria = rotulo(categorias, categoria);
 // Todas as abas em que o post aparece, separadas por espaço (usado pelo filtro do feed).
 const todasCategorias = [categoria, ...tambemEm.filter((c) => c !== categoria)].join(' ');
@@ -29,13 +31,17 @@ const todasCategorias = [categoria, ...tambemEm.filter((c) => c !== categoria)].
         <span class="capa-texto">{nomeCategoria}</span>
       </>
     )}
-    <span class="selo-posicao"><Veredito nota={nota} /></span>
+    <span class="selo-posicao">
+      {opiniao.divididas
+        ? opiniao.votos.map((v) => <Veredito nota={v.nota} quem={v.nome} />)
+        : <Veredito nota={opiniao.nota} />}
+    </span>
   </div>
   <div class="corpo">
     {capa && <p class="sobrancelha">{nomeCategoria}</p>}
     <h2>{titulo}</h2>
     {resumo && <p class="resumo">{resumo}</p>}
-    <p class="meta">por {rotulo(autoras, autora)} · {dataCurta(data)}</p>
+    <p class="meta">por {opiniao.nome} · {dataCurta(data)}</p>
   </div>
 </a>
 
@@ -88,7 +94,7 @@ const todasCategorias = [categoria, ...tambemEm.filter((c) => c !== categoria)].
   }
   .digitando i { width: 6px; height: 6px; border-radius: 50%; background: var(--cor-capa); }
 
-  .selo-posicao { position: absolute; left: 16px; bottom: -14px; z-index: 1; }
+  .selo-posicao { position: absolute; left: 16px; bottom: -14px; z-index: 1; display: flex; gap: 6px; }
   .selo-posicao :global(.selo) {
     text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.75rem; font-weight: 700;
     box-shadow: 0 2px 0 rgb(20 33 61 / 0.15);
