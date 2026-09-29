@@ -20,6 +20,21 @@ Precisa ter instalado: [Node.js](https://nodejs.org) (versão 22 ou mais nova) e
 
 Para desligar, aperte `Ctrl + C` no terminal.
 
+### Se aparecer "An Application Control policy has blocked this file"
+
+É o Windows bloqueando um componente. Sem mexer na segurança do computador, dá para usar a versão alternativa dele.
+No PowerShell, dentro da pasta `bloggers`:
+
+```bash
+npm.cmd install @bruits/satteri-wasm32-wasi@0.10.5 --no-save --force
+```
+
+E, para ligar o site, em vez de `npm run dev`:
+
+```bash
+$env:NAPI_RS_FORCE_WASI='true'; npm.cmd run dev
+```
+
 ## Como publicar um post (por enquanto, só no computador)
 
 1. Entre em http://localhost:4321/keystatic → **Posts** → **Add**.

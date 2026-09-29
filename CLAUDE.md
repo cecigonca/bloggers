@@ -69,6 +69,11 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
 - **Storage do Keystatic:** `local` por enquanto. Na etapa de ir pro ar, trocar para `github` (repo `cecigonca/bloggers`) e configurar o GitHub App do Keystatic.
 - Evitar `backdrop-filter` no topo fixo: dava problema de renderização ao rolar a página.
 - Depois de mudar CSS de componente, se o navegador mostrar a página sem estilo, reiniciar o `npm run dev` (o servidor às vezes fica desatualizado).
+- **Bloqueio do Windows (desde 29/09/2026):** o Controle de Aplicativos do Windows passou a bloquear o binário nativo
+  `@bruits/satteri-win32-x64-msvc` (usado pelo Astro para Markdown). Não mexer na segurança do Windows. Solução em uso:
+  a versão WebAssembly oficial (`npm install @bruits/satteri-wasm32-wasi@0.10.5 --no-save --force`) + variável
+  `NAPI_RS_FORCE_WASI=true` ao rodar `dev`/`build`. O `--no-save` some a cada `npm install`: reinstalar se voltar o erro.
+  O PowerShell também bloqueia `npm.ps1`; usar `npm.cmd`. Em outros computadores e na Vercel nada disso é necessário.
 - No Windows PowerShell 5.1, ler arquivos com `[IO.File]::ReadAllText` (UTF-8), nunca com `Get-Content -Raw` sem `-Encoding UTF8`: corrompe os acentos.
 
 ## Pendências com elas
