@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { titulo, descricao = 'Tudo que a gente julgava no grupo, agora em público. Porque todo mundo merece saber o que presta.' } = Astro.props;
-const tituloPagina = titulo ? `${titulo} · chatinhas` : 'chatinhas · a gente julga tudo';
+const tituloPagina = titulo ? `${titulo} · pitacadas` : 'pitacadas · a gente julga tudo';
 const caminho = Astro.url.pathname;
 ---
 
@@ -32,7 +32,7 @@ const caminho = Astro.url.pathname;
   <body>
     <header class="topo">
       <div class="container topo-conteudo">
-        <a href="/" class="logo"><Logo /> chatinhas</a>
+        <a href="/" class="logo">pitacadas <Logo /></a>
         <nav>
           <a href="/" aria-current={caminho === '/' ? 'page' : undefined}>feed</a>
           <a href="/sobre" aria-current={caminho.startsWith('/sobre') ? 'page' : undefined}>sobre nós</a>
@@ -46,8 +46,8 @@ const caminho = Astro.url.pathname;
 
     <footer class="rodape">
       <div class="container rodape-conteudo">
-        <a href="/" class="logo logo-rodape"><Logo /> chatinhas</a>
-        <p>chatinhas © {new Date().getFullYear()} · sem publi (ainda)</p>
+        <a href="/" class="logo logo-rodape">pitacadas <Logo /></a>
+        <p>pitacadas © {new Date().getFullYear()} · sem publi (ainda)</p>
       </div>
     </footer>
 
@@ -64,10 +64,11 @@ const caminho = Astro.url.pathname;
   }
   .topo-conteudo { display: flex; align-items: center; justify-content: space-between; height: 68px; }
   .logo {
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex; align-items: flex-start; gap: 3px;
     font-family: var(--fonte-titulo); font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em;
     text-decoration: none; color: var(--marinho);
   }
+  .logo :global(.logo-estrela) { width: 0.7em; height: 0.7em; margin-top: -0.05em; }
   nav { display: flex; gap: 6px; }
   nav a {
     text-decoration: none; font-weight: 600; color: var(--azul-cinza);
@@ -81,6 +82,5 @@ const caminho = Astro.url.pathname;
   .rodape { background: var(--marinho); color: var(--azul-cinza-claro); margin-top: 96px; padding: 48px 0; }
   .rodape-conteudo { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center; }
   .logo-rodape { color: var(--branco); }
-  .logo-rodape :global(circle) { fill: var(--marinho); }
   .rodape p { margin: 0; font-size: 0.9rem; }
 </style>

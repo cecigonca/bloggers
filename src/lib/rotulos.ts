@@ -25,7 +25,8 @@ export const notas = [
 export const autoras = [
   { value: 'cecilia', label: 'Cecília' },
   { value: 'amiga', label: 'Amiga' },
-  { value: 'chatinhas', label: 'chatinhas' },
+  // O value continua 'chatinhas' (é o que fica salvo nos posts); o nome que aparece é "pitacadas".
+  { value: 'chatinhas', label: 'pitacadas' },
 ];
 
 type Opcao = { value: string; label: string };

@@ -5,17 +5,18 @@ import { createElement as h } from 'react';
 import { config, fields, collection, singleton } from '@keystatic/core';
 import { categorias, notas } from './src/lib/rotulos';
 
-// O balãozinho do logo do blog, no canto do admin.
-function Logo({ colorScheme }: { colorScheme: 'light' | 'dark' }) {
-  const balao = colorScheme === 'dark' ? '#c7d0dd' : '#14213d';
-  const pontos = colorScheme === 'dark' ? '#14213d' : '#ffffff';
+// A estrela dourada do logo, no canto do admin (o Keystatic sempre põe o símbolo à esquerda do nome).
+function Logo() {
   return h(
     'svg',
-    { viewBox: '0 0 32 32', width: 26, height: 26, 'aria-hidden': true },
-    h('path', { d: 'M6 5h20a4 4 0 0 1 4 4v11a4 4 0 0 1-4 4H13l-6 5v-5H6a4 4 0 0 1-4-4V9a4 4 0 0 1 4-4z', fill: balao }),
-    h('circle', { cx: 10.5, cy: 14.5, r: 1.8, fill: pontos }),
-    h('circle', { cx: 16, cy: 14.5, r: 1.8, fill: pontos }),
-    h('circle', { cx: 21.5, cy: 14.5, r: 1.8, fill: pontos })
+    { viewBox: '0 0 24 24', width: 22, height: 22, 'aria-hidden': true },
+    h('path', {
+      d: 'M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z',
+      fill: '#c08b1e',
+      stroke: '#c08b1e',
+      strokeWidth: 1.6,
+      strokeLinejoin: 'round',
+    })
   );
 }
 
@@ -37,7 +38,7 @@ export default config({
   locale: 'pt-BR',
 
   ui: {
-    brand: { name: 'chatinhas', mark: Logo },
+    brand: { name: 'pitacadas', mark: Logo },
     navigation: {
       Blog: ['posts'],
       Páginas: ['sobre'],
