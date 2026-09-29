@@ -4,7 +4,7 @@ Blog de avaliação de coisas, feito por duas amigas (Cecília e uma amiga) que 
 Explique tudo em português simples, sem jargão, e sempre diga como ver o resultado (`npm run dev` → http://localhost:4321).
 
 O nome do blog é **pitacadas** (de "dar pitaco"). Antes se chamava "chatinhas"; o valor interno `chatinhas` continua existindo no campo `opiniao` (= as duas concordam) e em alguns nomes de pasta, mas na tela aparece "pitacadas".
-Logo: "pitacadas" na fonte do site com uma **estrela dourada à direita**, no alto (`src/components/Logo.astro`); favicon é a estrela. No admin a estrela fica à esquerda (limitação do Keystatic). A Cecília rejeitou logos com cara de IA (balão, formas geométricas perfeitas); busca algo cool/descolado, com vibe tipo Gossip Girl, para o futuro. O repositório no GitHub se chama `cecigonca/bloggers`.
+Logo: "pitacadas" na fonte do site com uma **estrela dourada à direita, na mesma linha** (centralizada com o texto, não no alto) (`src/components/Logo.astro`); favicon é a estrela. No admin a estrela fica à esquerda (limitação do Keystatic). A Cecília rejeitou logos com cara de IA (balão, formas geométricas perfeitas); busca algo cool/descolado, com vibe tipo Gossip Girl, para o futuro. O repositório no GitHub se chama `cecigonca/bloggers`.
 O trabalho está na branch `v0` (a `main` ainda só tem o README original).
 
 ## Conceito e tom de voz
