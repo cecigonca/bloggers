@@ -4,10 +4,8 @@
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
 import Base from '../layouts/Base.astro';
-import Veredito from '../components/Veredito.astro';
 import Estrela from '../components/Estrela.astro';
-import Logo from '../components/Logo.astro';
-import { notas, autoras, rotulo } from '../lib/rotulos';
+import { notas } from '../lib/rotulos';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const sobre = await reader.singletons.sobre.read();
@@ -16,8 +14,6 @@ const chamada = sobre?.chamada || 'Basicamente duas amigas com opinião sobre tu
 const paragrafos = (sobre?.texto ?? '').split(/\n\s*\n/).filter(Boolean);
 const pessoas = sobre?.pessoas ?? [];
 const escala = [...notas].sort((a, b) => Number(a.value) - Number(b.value));
-const cecilia = rotulo(autoras, 'cecilia');
-const katsuki = rotulo(autoras, 'amiga');
 ---
 
 <Base titulo="Sobre nós">
@@ -30,7 +26,7 @@ const katsuki = rotulo(autoras, 'amiga');
 
     {pessoas.length > 0 && (
       <section class="bloco-secao">
-        <h2>Quem julga</h2>
+        <h2>Quem somos</h2>
         <div class="pessoas">
           {pessoas.map((pessoa, i) => (
             <article class:list={['pessoa', `pessoa-${i % 2}`]}>
@@ -53,7 +49,7 @@ const katsuki = rotulo(autoras, 'amiga');
 
     <section class="bloco-secao">
       <h2>Como a gente avalia</h2>
-      <p class="texto">Todo post termina com uma nota de 1 a 5. É assim que a gente lê cada uma:</p>
+      <p class="texto">As notas vão de 1 a 5.</p>
 
       <ol class="regua">
         {escala.map((n) => (
@@ -65,34 +61,6 @@ const katsuki = rotulo(autoras, 'amiga');
           </li>
         ))}
       </ol>
-
-      <h3 class="subtitulo">E de quem é a opinião</h3>
-      <div class="jeitos">
-        <div class="jeito">
-          <div class="jeito-exemplo">
-            <span class="mini-avatar">{cecilia.charAt(0)}</span>
-            <Veredito nota={4} />
-          </div>
-          <p class="jeito-nome">Só uma de nós</p>
-          <p class="jeito-texto">quando só uma foi, viu ou testou. o post diz de quem é.</p>
-        </div>
-        <div class="jeito">
-          <div class="jeito-exemplo">
-            <span class="mini-avatar mini-estrela"><Logo /></span>
-            <Veredito nota={5} />
-          </div>
-          <p class="jeito-nome">As duas concordam</p>
-          <p class="jeito-texto">a gente viu junto e pensa igual. assina como pitacadas.</p>
-        </div>
-        <div class="jeito">
-          <div class="jeito-exemplo">
-            <Veredito nota={3} quem={cecilia} />
-            <Veredito nota={4} quem={katsuki} />
-          </div>
-          <p class="jeito-nome">Cada uma acha uma coisa</p>
-          <p class="jeito-texto">deu discordância. o post mostra a nota e a opinião de cada uma.</p>
-        </div>
-      </div>
     </section>
   </div>
 </Base>
@@ -107,7 +75,7 @@ const katsuki = rotulo(autoras, 'amiga');
   .bloco-secao { margin-top: 72px; }
   .bloco-secao > h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; }
 
-  /* Quem julga */
+  /* Quem somos */
   .pessoas { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
   .pessoa { background: var(--branco); border-radius: var(--raio); padding: 28px; }
   .pessoa-topo { display: flex; align-items: center; gap: 18px; }
@@ -143,21 +111,6 @@ const katsuki = rotulo(autoras, 'amiga');
   .nota-5 .numero { color: var(--dourado); }
   .degrau strong { font-size: 1.05rem; }
   .descricao { font-size: 0.92rem; line-height: 1.35; color: var(--texto-suave); padding-right: 6px; }
-
-  /* De quem é a opinião */
-  .subtitulo { font-size: 1.5rem; font-weight: 800; margin: 40px 0 16px; }
-  .jeitos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-  .jeito { background: var(--branco); border-radius: var(--raio); padding: 22px 24px; }
-  .jeito-exemplo { display: flex; align-items: center; gap: 8px; min-height: 40px; }
-  .mini-avatar {
-    width: 36px; height: 36px; border-radius: 50%; flex: none;
-    display: grid; place-items: center;
-    background: var(--azul-cinza-claro); color: var(--marinho);
-    font-family: var(--fonte-titulo); font-weight: 800;
-  }
-  .mini-estrela :global(svg) { width: 20px; height: 20px; }
-  .jeito-nome { margin: 16px 0 4px; font-family: var(--fonte-titulo); font-weight: 800; font-size: 1.2rem; }
-  .jeito-texto { margin: 0; color: var(--texto-suave); line-height: 1.45; }
 
   @media (max-width: 700px) {
     .regua { grid-template-columns: 1fr; gap: 14px; padding: 22px; }
