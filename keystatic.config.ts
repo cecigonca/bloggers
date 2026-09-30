@@ -30,9 +30,13 @@ function campoNota(label: string) {
 }
 
 export default config({
-  // 'local' = salva os posts como arquivos no seu computador.
-  // Quando o site for pro ar, trocamos para 'github'.
-  storage: { kind: 'local' },
+  // No site no ar (Vercel), os posts são salvos direto no GitHub (repo cecigonca/bloggers).
+  // No computador, salvam como arquivos locais — a não ser que PUBLIC_KEYSTATIC_MODO=github
+  // (usado para configurar o GitHub App do Keystatic pela primeira vez).
+  storage:
+    import.meta.env.PROD || import.meta.env.PUBLIC_KEYSTATIC_MODO === 'github'
+      ? { kind: 'github', repo: 'cecigonca/bloggers' }
+      : { kind: 'local' },
 
   // Botões e menus do admin em português.
   locale: 'pt-BR',

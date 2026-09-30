@@ -68,8 +68,8 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
 - **Esconder data / quem escreveu:** caixinhas `esconderData` e `esconderAutoria` por post. A data continua obrigatória (ordena o feed).
 - **Voltar pro feed:** volta pra aba de onde a pessoa veio (lê o `document.referrer`).
 - **Post em mais de uma aba:** campo `categoria` (principal, vai na capa do card) + `tambemEm` (lista de outras abas, ex.: `trending`). O card leva todas em `data-categorias`; na página do post viram chips clicáveis.
-- **Hospedagem planejada:** Vercel (adapter `@astrojs/vercel` já instalado).
-- **Storage do Keystatic:** `local` por enquanto. Na etapa de ir pro ar, trocar para `github` (repo `cecigonca/bloggers`) e configurar o GitHub App do Keystatic.
+- **Hospedagem:** Vercel, projeto `pitacadas` → https://pitacadas.vercel.app. Todo push na `main` publica sozinho; cada branch ganha link de prévia.
+- **Storage do Keystatic:** `github` (repo `cecigonca/bloggers`) no site no ar (`import.meta.env.PROD`); `local` no computador, a não ser com `PUBLIC_KEYSTATIC_MODO=github` (config "blog-github" do preview). GitHub App criado em 30/09/2026; os 4 segredos (`KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET`, `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`) estão no `.env` local (fora do git) e nas Environment Variables da Vercel. Posts publicados pelo site viram commits na `main`: sempre dar `git pull` antes de mexer no código.
 - Evitar `backdrop-filter` no topo fixo: dava problema de renderização ao rolar a página.
 - Depois de mudar CSS de componente, se o navegador mostrar a página sem estilo, reiniciar o `npm run dev` (o servidor às vezes fica desatualizado).
 - **Bloqueio do Windows (desde 29/09/2026):** o Controle de Aplicativos do Windows passou a bloquear o binário nativo
