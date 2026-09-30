@@ -1,6 +1,6 @@
 # pitacadas — contexto do projeto
 
-Blog de avaliação de coisas, feito por duas amigas (Cecília e uma amiga) que **não são da área de tecnologia**.
+Blog de avaliação de coisas, feito por duas amigas, **Cecília e Katsuki**, que **não são da área de tecnologia**.
 Explique tudo em português simples, sem jargão, e sempre diga como ver o resultado (`npm run dev` → http://localhost:4321).
 
 O nome do blog é **pitacadas** (de "dar pitaco"). Antes se chamava "chatinhas"; o valor interno `chatinhas` continua existindo no campo `opiniao` (= as duas concordam) e em alguns nomes de pasta, mas na tela aparece "pitacadas".
@@ -51,6 +51,8 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
   Ao mudar um campo no Keystatic, mude também o schema em `src/content.config.ts` e ajuste os posts existentes.
   Títulos com ":" no frontmatter precisam de aspas (o Keystatic já faz isso sozinho).
 - **Página "Sobre nós":** editável pelo admin (singleton `sobre`), salva em `src/data/sobre.yaml`, lida com o reader do Keystatic.
+  Estrutura: chamada + texto → "Quem julga" (card por pessoa: foto/inicial, nome, frase, mini ficha) → "Como a gente avalia" (régua 1★–5★ + os 3 jeitos de opinar). As mini fichas atuais são exemplos que elas devem trocar.
+- **Katsuki:** o valor interno continua `amiga` (posts e campos `notaAmiga`/`opiniaoAmiga`); na tela aparece "Katsuki" via `src/lib/rotulos.ts`.
 - **Imagens:** `public/images/posts/` e `public/images/sobre/`.
 - **Filtro por tópico na home:** feito no navegador (JS em `src/pages/index.astro`) e guardado no link como `?topico=...`.
 - **Estrutura do post** (decidida com as duas via protótipo): tudo numa coluna só de 880px (título, capa, blocos, ficha, texto, galeria, veredito com as mesmas bordas).
@@ -78,7 +80,6 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
 
 ## Pendências com elas
 
-- Nome real da amiga (trocar "Amiga" em `src/lib/rotulos.ts` e em `src/data/sobre.yaml`).
 - Tópicos definitivos das abas (os atuais são provisórios).
 - Textos reais do "Sobre nós" e fotos.
 - Confirmar o nome "chatinhas".

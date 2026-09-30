@@ -24,7 +24,8 @@ export const notas = [
 
 export const autoras = [
   { value: 'cecilia', label: 'Cecília' },
-  { value: 'amiga', label: 'Amiga' },
+  // O value continua 'amiga' (é o que fica salvo nos posts); na tela aparece o nome dela.
+  { value: 'amiga', label: 'Katsuki' },
   // O value continua 'chatinhas' (é o que fica salvo nos posts); o nome que aparece é "pitacadas".
   { value: 'chatinhas', label: 'pitacadas' },
 ];

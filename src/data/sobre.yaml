@@ -1,12 +1,24 @@
 chamada: Basicamente duas amigas com opinião sobre tudo
 texto: |-
-  Somos duas amigas que passam o dia mandando no grupo o que presta e o que não presta. Restaurante, série, protetor solar, aquele app que prometia organizar a vida. Nada escapa.
+  A gente é a Cecília e a Katsuki. Faz anos que a gente comenta tudo uma com a outra: o restaurante que decepcionou, a série que todo mundo ama e a gente não, o produto que prometeu e não cumpriu.
 
-  Um dia a gente percebeu: esse tanto de opinião não podia ficar escondido no WhatsApp. Então aqui está. Do wpp pro blog, sem filtro e sem publi.
-
-  (Texto provisório! Troquem pelo de vocês no admin.)
+  Um dia caiu a ficha de que essas opiniões mereciam sair do chat. Então aqui estão, sem publi e sem filtro. Às vezes a gente concorda. Às vezes não, e aí você vai ver as duas notas.
 pessoas:
   - nome: Cecília
-    bio: Escreva aqui uma bio curtinha e divertida sobre você.
-  - nome: Amiga
-    bio: Escreva aqui uma bio curtinha e divertida sobre ela.
+    frase: a que testa tudo primeiro
+    detalhes:
+      - rotulo: Especialidade
+        valor: comes & bebes
+      - rotulo: Julga sem dó
+        valor: hype de tiktok
+      - rotulo: Não resiste a
+        valor: um lugar novo
+  - nome: Katsuki
+    frase: a que nunca dá 5 estrelas de primeira
+    detalhes:
+      - rotulo: Especialidade
+        valor: filmes & séries
+      - rotulo: Julga sem dó
+        valor: final mal escrito
+      - rotulo: Não resiste a
+        valor: uma maratona
