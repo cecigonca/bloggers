@@ -86,17 +86,45 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
     }
   }
 
+  // Celular: a faixa de abas rola pro lado. Os degradês nas bordas mostram que tem mais abas escondidas.
+  const abas = document.querySelector<HTMLElement>('.abas')!;
+  const linhaAbas = document.querySelector<HTMLElement>('.abas-linha')!;
+  function atualizarBordas() {
+    const fim = abas.scrollWidth - abas.clientWidth;
+    linhaAbas.classList.toggle('tem-esquerda', abas.scrollLeft > 4);
+    linhaAbas.classList.toggle('tem-direita', abas.scrollLeft < fim - 4);
+  }
+  abas.addEventListener('scroll', atualizarBordas, { passive: true });
+  window.addEventListener('resize', atualizarBordas);
+
+  // Leva a aba escolhida pro meio da faixa (só mexe na rolagem lateral das abas).
+  function centralizarAba(botao: HTMLElement) {
+    const caixa = abas.getBoundingClientRect();
+    const b = botao.getBoundingClientRect();
+    const alvo = abas.scrollLeft + (b.left - caixa.left) - (caixa.width - b.width) / 2;
+    abas.scrollTo({ left: alvo, behavior: 'smooth' });
+  }
+
   botoes.forEach((b) =>
     b.addEventListener('click', () => {
       const abasGrudadas = feed.getBoundingClientRect().top <= 68;
       filtrar(b.dataset.topico ?? '');
       // Se a pessoa já estava rolando o feed, mantém o começo do feed na tela.
       if (abasGrudadas) feed.scrollIntoView({ block: 'start' });
+      // Depois da rolagem da página, desliza a aba escolhida pro meio da faixa.
+      requestAnimationFrame(() => centralizarAba(b));
     })
   );
 
   const inicial = new URLSearchParams(location.search).get('topico');
   if (inicial) filtrar(inicial, false);
+  const botaoInicial = [...botoes].find((b) => b.dataset.topico === (inicial ?? ''));
+  if (botaoInicial && inicial) {
+    const caixa = abas.getBoundingClientRect();
+    const b = botaoInicial.getBoundingClientRect();
+    abas.scrollLeft += b.left - caixa.left - (caixa.width - b.width) / 2;
+  }
+  atualizarBordas();
 </script>
 
 <style>
@@ -211,6 +239,24 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.data.getTime(
   }
   .abas button:hover { background: var(--cinza-claro); }
   .abas button[aria-pressed='true'] { background: var(--marinho); color: var(--branco); }
+
+  /* Só no celular. No computador todas as abas cabem e nada disso aparece. */
+  @media (max-width: 700px) {
+    .abas-linha { position: relative; }
+    .abas { scroll-padding-inline: 24px; }
+    .abas > :first-child { margin-left: 0; }
+    .abas > :last-child { margin-right: 24px; }
+    .abas button { font-size: 0.8rem; padding: 8px 14px; }
+
+    /* Opção 1: degradê nas bordas quando tem aba escondida daquele lado. */
+    .abas-linha::before, .abas-linha::after {
+      content: ''; position: absolute; top: 1.5px; bottom: 1.5px; width: 44px;
+      pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 1;
+    }
+    .abas-linha::before { left: 0; background: linear-gradient(to right, var(--fundo), rgb(242 243 245 / 0)); }
+    .abas-linha::after { right: 0; background: linear-gradient(to left, var(--fundo) 20%, rgb(242 243 245 / 0)); }
+    .abas-linha.tem-esquerda::before, .abas-linha.tem-direita::after { opacity: 1; }
+  }
 
 
   .feed { padding-top: 24px; }
