@@ -1,6 +1,7 @@
 ---
 // Página "Sobre nós". O conteúdo é editado pelo admin (/keystatic → Sobre nós)
-// e fica salvo em src/data/sobre.yaml. A parte "Como a gente avalia" é fixa.
+// e fica salvo em src/data/sobre.yaml. A régua das notas é fixa.
+// Inspiração: páginas "about" do The Infatuation (regras curtas de como avaliam) e do Cup of Jo (bios curtas e diretas).
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
 import Base from '../layouts/Base.astro';
@@ -12,6 +13,7 @@ const sobre = await reader.singletons.sobre.read();
 
 const chamada = sobre?.chamada || 'Basicamente duas amigas com opinião sobre tudo';
 const paragrafos = (sobre?.texto ?? '').split(/\n\s*\n/).filter(Boolean);
+const regras = sobre?.regras ?? [];
 const pessoas = sobre?.pessoas ?? [];
 const escala = [...notas].sort((a, b) => Number(a.value) - Number(b.value));
 ---
@@ -21,25 +23,37 @@ const escala = [...notas].sort((a, b) => Number(a.value) - Number(b.value));
     <section class="intro">
       <p class="sobrancelha">sobre nós</p>
       <h1>{chamada}</h1>
-      {paragrafos.map((p) => <p class="texto">{p}</p>)}
+      {paragrafos.map((p) => <p class="lead">{p}</p>)}
     </section>
 
+    {regras.length > 0 && (
+      <section class="secao">
+        <h2>Como funciona aqui</h2>
+        <div class="regras">
+          {regras.map((r) => (
+            <div class="regra">
+              <p class="regra-titulo">{r.titulo}</p>
+              <p class="regra-texto">{r.texto}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
     {pessoas.length > 0 && (
-      <section class="bloco-secao">
-        <h2>Quem somos</h2>
+      <section class="secao">
+        <h2>Quem escreve</h2>
         <div class="pessoas">
           {pessoas.map((pessoa, i) => (
-            <article class:list={['pessoa', `pessoa-${i % 2}`]}>
-              <div class="pessoa-topo">
-                {pessoa.foto ? (
-                  <img src={pessoa.foto} alt={pessoa.nome} class="foto" />
-                ) : (
-                  <span class="foto foto-inicial" aria-hidden="true">{pessoa.nome.charAt(0)}</span>
-                )}
-                <div>
-                  <h3>{pessoa.nome}</h3>
-                  {pessoa.frase && <p class="frase">{pessoa.frase}</p>}
-                </div>
+            <article class="pessoa">
+              {pessoa.foto ? (
+                <img src={pessoa.foto} alt={pessoa.nome} class="foto" />
+              ) : (
+                <span class:list={['foto', 'foto-inicial', `foto-${i % 2}`]} aria-hidden="true">{pessoa.nome.charAt(0)}</span>
+              )}
+              <div>
+                <h3>{pessoa.nome}</h3>
+                {pessoa.bio && <p class="bio">{pessoa.bio}</p>}
               </div>
             </article>
           ))}
@@ -47,10 +61,8 @@ const escala = [...notas].sort((a, b) => Number(a.value) - Number(b.value));
       </section>
     )}
 
-    <section class="bloco-secao">
-      <h2>Como a gente avalia</h2>
-      <p class="texto">As notas vão de 1 a 5.</p>
-
+    <section class="secao">
+      <h2>As notas</h2>
       <ol class="regua">
         {escala.map((n) => (
           <li class={`degrau nota-${n.value}`}>
@@ -69,35 +81,42 @@ const escala = [...notas].sort((a, b) => Number(a.value) - Number(b.value));
   .coluna { max-width: 880px; margin: 0 auto; padding: 0 16px; }
 
   .intro { padding-top: 48px; }
-  h1 { font-size: clamp(2.6rem, 7vw, 4.4rem); font-weight: 800; margin: 14px 0 24px; }
-  .texto { font-size: 1.15rem; line-height: 1.65; color: var(--texto-suave); margin: 0 0 1em; max-width: 60ch; }
+  h1 { font-size: clamp(2.6rem, 7vw, 4.4rem); font-weight: 800; margin: 14px 0 20px; }
+  .lead { font-size: 1.3rem; line-height: 1.5; color: var(--texto-suave); margin: 0; max-width: 36em; }
 
-  .bloco-secao { margin-top: 72px; }
-  .bloco-secao > h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; }
+  .secao { margin-top: 72px; }
+  .secao > h2 {
+    font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+    font-family: var(--fonte-texto); color: var(--azul-cinza);
+    padding-bottom: 14px; border-bottom: 1.5px solid var(--marinho); margin-bottom: 8px;
+  }
 
-  /* Quem somos */
-  .pessoas { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
-  .pessoa { background: var(--branco); border-radius: var(--raio); padding: 28px; }
-  .pessoa-topo { display: flex; align-items: center; gap: 18px; }
-  .foto { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; flex: none; }
+  /* Regras: título forte + uma frase, estilo lista editorial. */
+  .regras { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; }
+  .regra { padding: 22px 0; border-bottom: 1px solid var(--borda); }
+  .regra-titulo { margin: 0; font-family: var(--fonte-titulo); font-weight: 800; font-size: 1.7rem; line-height: 1.1; letter-spacing: -0.02em; }
+  .regra-texto { margin: 8px 0 0; color: var(--texto-suave); font-size: 1.05rem; line-height: 1.5; }
+
+  /* Quem escreve: bio curta e direta. */
+  .pessoas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; }
+  .pessoa { display: flex; gap: 18px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid var(--borda); }
+  .foto { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; flex: none; }
   .foto-inicial {
     display: grid; place-items: center;
+    font-family: var(--fonte-titulo); font-weight: 800; font-size: 1.8rem;
     background: var(--marinho); color: var(--branco);
-    font-family: var(--fonte-titulo); font-weight: 800; font-size: 2.2rem;
   }
-  .pessoa-1 .foto-inicial { background: var(--azul-cinza); }
-  .pessoa h3 { font-size: 2rem; font-weight: 800; }
-  .frase { margin: 4px 0 0; color: var(--texto-suave); font-size: 1.05rem; }
-
+  .foto-1 { background: var(--azul-cinza); }
+  .pessoa h3 { font-size: 1.5rem; font-weight: 800; }
+  .bio { margin: 6px 0 0; color: var(--texto-suave); line-height: 1.55; }
 
   /* Régua das notas */
   .regua {
-    list-style: none; padding: 28px; margin: 20px 0 0;
-    background: var(--branco); border-radius: var(--raio);
-    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px;
+    list-style: none; padding: 24px 0 0; margin: 0;
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px;
   }
   .degrau { display: flex; flex-direction: column; gap: 8px; }
-  .barra { height: 10px; border-radius: 999px; background: var(--cor-degrau); }
+  .barra { height: 8px; border-radius: 999px; background: var(--cor-degrau); }
   .nota-1 { --cor-degrau: var(--cinza-claro); }
   .nota-2 { --cor-degrau: var(--azul-cinza-claro); }
   .nota-3 { --cor-degrau: var(--azul-cinza); }
@@ -105,7 +124,7 @@ const escala = [...notas].sort((a, b) => Number(a.value) - Number(b.value));
   .nota-5 { --cor-degrau: var(--dourado); }
   .numero {
     display: flex; align-items: center; gap: 4px; margin-top: 6px;
-    font-family: var(--fonte-titulo); font-weight: 800; font-size: 3.2rem; line-height: 1; letter-spacing: -0.04em;
+    font-family: var(--fonte-titulo); font-weight: 800; font-size: 3rem; line-height: 1; letter-spacing: -0.04em;
   }
   .numero :global(.estrela) { width: 0.5em; height: 0.5em; }
   .nota-5 .numero { color: var(--dourado); }
@@ -113,12 +132,12 @@ const escala = [...notas].sort((a, b) => Number(a.value) - Number(b.value));
   .descricao { font-size: 0.92rem; line-height: 1.35; color: var(--texto-suave); padding-right: 6px; }
 
   @media (max-width: 700px) {
-    .regua { grid-template-columns: 1fr; gap: 14px; padding: 22px; }
+    .regras, .pessoas { grid-template-columns: 1fr; }
+    .regua { grid-template-columns: 1fr; gap: 14px; }
     .degrau { display: grid; grid-template-columns: 6px 64px 1fr; grid-template-rows: auto auto; column-gap: 14px; align-items: center; }
     .barra { grid-row: span 2; height: 100%; width: 6px; }
     .numero { grid-row: span 2; margin: 0; font-size: 2.4rem; }
     .degrau strong { align-self: end; }
     .descricao { align-self: start; }
-    .pessoa { padding: 22px; }
   }
 </style>

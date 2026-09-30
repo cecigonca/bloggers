@@ -51,7 +51,8 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
   Ao mudar um campo no Keystatic, mude também o schema em `src/content.config.ts` e ajuste os posts existentes.
   Títulos com ":" no frontmatter precisam de aspas (o Keystatic já faz isso sozinho).
 - **Página "Sobre nós":** editável pelo admin (singleton `sobre`), salva em `src/data/sobre.yaml`, lida com o reader do Keystatic.
-  Estrutura: chamada + texto → "Quem somos" (card por pessoa: foto/inicial, nome e frase; a Cecília ODIOU a mini ficha de "especialidade / julga sem dó", não voltar com isso) → "Como a gente avalia" (só a régua 1★–5★). Rejeitados: título "Quem julga" (brega), bloco "E de quem é a opinião", texto com expressão pronta ("caiu a ficha", "sem filtro"). As frases atuais são exemplos que elas devem trocar.
+  Estrutura (inspirada no The Infatuation e no Cup of Jo): chamada + uma frase → "Como funciona aqui" (regras curtas, título forte + uma frase, editáveis) → "Quem escreve" (bio curta de cada uma) → "As notas" (régua). Títulos de seção pequenos, em caixa alta, com linha embaixo.
+  Rejeitados: mini ficha de "especialidade", "Quem julga", "E de quem é a opinião", texto com expressão pronta ("caiu a ficha", "sem filtro"), frases de efeito sob os nomes.
 - **Katsuki:** o valor interno continua `amiga` (posts e campos `notaAmiga`/`opiniaoAmiga`); na tela aparece "Katsuki" via `src/lib/rotulos.ts`.
 - **Imagens:** `public/images/posts/` e `public/images/sobre/`.
 - **Filtro por tópico na home:** feito no navegador (JS em `src/pages/index.astro`) e guardado no link como `?topico=...`.

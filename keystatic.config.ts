@@ -221,6 +221,17 @@ export default config({
           description: 'Pule uma linha para começar um parágrafo novo.',
           multiline: true,
         }),
+        regras: fields.array(
+          fields.object({
+            titulo: fields.text({ label: 'Regra', description: 'Curtinha e direta. Ex.: "Sem publi."' }),
+            texto: fields.text({ label: 'Explicação', description: 'Uma frase.', multiline: true }),
+          }),
+          {
+            label: 'Como funciona aqui',
+            description: 'As regras de como vocês avaliam. Três ou quatro já bastam.',
+            itemLabel: (props) => props.fields.titulo.value || 'regra nova',
+          }
+        ),
         pessoas: fields.array(
           fields.object({
             nome: fields.text({ label: 'Nome' }),
@@ -230,9 +241,10 @@ export default config({
               directory: 'public/images/sobre',
               publicPath: '/images/sobre/',
             }),
-            frase: fields.text({
-              label: 'Uma frase que te define',
-              description: 'Curtinha, aparece embaixo do nome. Ex.: "a que testa tudo primeiro".',
+            bio: fields.text({
+              label: 'Bio',
+              description: 'Duas ou três frases sobre você, do seu jeito.',
+              multiline: true,
             }),
           }),
           {
