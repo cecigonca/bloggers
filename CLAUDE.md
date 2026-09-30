@@ -84,7 +84,6 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
 - Tópicos definitivos das abas (os atuais são provisórios).
 - Textos reais do "Sobre nós" e fotos.
 - Confirmar o nome "chatinhas".
-- Os 6 posts atuais são exemplos (tag `exemplo`) e devem ser apagados antes de lançar.
 - Com poucos posts sobra um buraco no fim do mosaico (dá para esticar o último card, se elas quiserem).
 
 ## Plano
