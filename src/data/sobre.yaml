@@ -1,8 +1,8 @@
 chamada: Basicamente duas amigas com opinião sobre tudo
-texto: A gente é a Cecília e a Katsuki. Aqui a gente conta o que achou de restaurantes, séries, produtos e rolês.
+texto: ''
 regras:
-  - titulo: Sem publi.
-    texto: Ninguém paga pra aparecer aqui. Se um dia rolar parceria, o post avisa.
+  - titulo: Sem publi, ainda.
+    texto: Mas bem que a gente queria ser paga pra fazer o que já faz de graça.
   - titulo: Só avalia o que testou.
     texto: Se tá no blog, a gente foi, comeu, assistiu ou usou de verdade.
   - titulo: Nota sincera.
@@ -11,6 +11,4 @@ regras:
     texto: Quando cada uma acha uma coisa, o post mostra as duas notas.
 pessoas:
   - nome: Cecília
-    bio: Troque por duas ou três frases sobre você no admin, em Sobre nós.
   - nome: Katsuki
-    bio: Troque por duas ou três frases sobre você no admin, em Sobre nós.
