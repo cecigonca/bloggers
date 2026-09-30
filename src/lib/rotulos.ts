@@ -10,7 +10,6 @@ export const categorias = [
   { value: 'beleza', label: 'Beleza' },
   { value: 'compras', label: 'Comprinhas' },
   { value: 'livros', label: 'Livros' },
-  { value: 'aleatorio', label: 'Aleatórios' },
 ];
 
 // A nota vira um "veredito" com nome, que é mais divertido que só estrelinha.

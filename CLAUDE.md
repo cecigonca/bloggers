@@ -84,6 +84,7 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
 - Tópicos definitivos das abas (os atuais são provisórios).
 - Textos reais do "Sobre nós" e fotos.
 - Confirmar o nome "chatinhas".
+- Todos os posts (os 6 de exemplo e os 2 reais) foram apagados em 30/09/2026 para lançar do zero; estão no histórico do git se precisar.
 - Com poucos posts sobra um buraco no fim do mosaico (dá para esticar o último card, se elas quiserem).
 
 ## Plano

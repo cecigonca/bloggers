@@ -75,7 +75,7 @@ export default config({
           label: 'Categoria principal',
           description: 'FEED + POST · A aba principal do post. É o nome que aparece na capa do card.',
           options: categorias,
-          defaultValue: 'aleatorio',
+          defaultValue: 'comida',
         }),
         tambemEm: fields.multiselect({
           label: 'Também aparece em',
