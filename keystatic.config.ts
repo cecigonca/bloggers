@@ -56,11 +56,14 @@ export default config({
       columns: ['titulo', 'categoria', 'data'],
       // Botão "ver" no formulário, que abre o post no site.
       previewUrl: '/posts/{slug}',
+      // Ordem do formulário: primeiro o que aparece no card do feed, depois o que só aparece dentro do post.
+      // Cada descrição começa com "FEED + POST" ou "SÓ NO POST" pra deixar isso claro.
       schema: {
+        // ───────── Aparece no card do feed (e no post) ─────────
         titulo: fields.slug({
           name: {
             label: 'Título',
-            description: 'Capricha, é a primeira coisa que a galera vê.',
+            description: 'FEED + POST · Capricha, é a primeira coisa que a galera vê.',
             validation: { isRequired: true },
           },
           slug: {
@@ -70,19 +73,20 @@ export default config({
         }),
         categoria: fields.select({
           label: 'Categoria principal',
-          description: 'A aba principal do post. É o nome que aparece na capa do card.',
+          description: 'FEED + POST · A aba principal do post. É o nome que aparece na capa do card.',
           options: categorias,
           defaultValue: 'aleatorio',
         }),
         tambemEm: fields.multiselect({
           label: 'Também aparece em',
-          description: 'Opcional. Marque outras abas onde o post deve aparecer (ex.: Trending).',
+          description: 'FEED + POST · Opcional. Outras abas do feed onde o post aparece (ex.: Trending).',
           options: categorias,
         }),
         // De quem é a opinião. Quando "cada uma acha uma coisa", aparecem nota e frase de cada uma.
         opiniao: fields.conditional(
           fields.select({
             label: 'De quem é a opinião?',
+            description: 'FEED + POST · Define o "por ..." e a nota do card.',
             options: [
               { label: 'Só da Cecília', value: 'cecilia' },
               { label: 'Só da Amiga', value: 'amiga' },
@@ -97,36 +101,62 @@ export default config({
             chatinhas: fields.object({ nota: campoNota('Veredito') }),
             divididas: fields.object({
               notaCecilia: campoNota('Nota da Cecília'),
-              opiniaoCecilia: fields.text({ label: 'O que a Cecília achou', description: 'Uma ou duas frases.', multiline: true }),
+              opiniaoCecilia: fields.text({
+                label: 'O que a Cecília achou',
+                description: 'SÓ NO POST · Uma ou duas frases. Aparece no veredito final.',
+                multiline: true,
+              }),
               notaAmiga: campoNota('Nota da Amiga'),
-              opiniaoAmiga: fields.text({ label: 'O que a Amiga achou', description: 'Uma ou duas frases.', multiline: true }),
+              opiniaoAmiga: fields.text({
+                label: 'O que a Amiga achou',
+                description: 'SÓ NO POST · Uma ou duas frases. Aparece no veredito final.',
+                multiline: true,
+              }),
             }),
           }
         ),
-        spoiler: fields.checkbox({
-          label: 'Tem spoiler?',
-          description: 'Marcado, o post mostra um aviso antes da foto e dos blocos.',
-          defaultValue: false,
-        }),
         resumo: fields.text({
           label: 'A fofoca em uma frase',
-          description: 'Aparece no card do feed e embaixo do título. Uma ou duas frases, curtinho.',
+          description: 'FEED + POST · Aparece no card e embaixo do título. Uma ou duas frases, curtinho.',
           multiline: true,
         }),
         capa: fields.image({
           label: 'Foto de capa',
-          description: 'Opcional. Sem foto, o card ganha um fundo colorido com o nome da categoria.',
+          description: 'FEED + POST · Opcional. Sem foto, o card ganha um fundo colorido com o nome da categoria.',
           directory: 'public/images/posts',
           publicPath: '/images/posts/',
         }),
+        data: fields.date({
+          label: 'Data',
+          description: 'FEED + POST · Já vem com a data de hoje. Mesmo escondida, é ela que define a ordem do feed.',
+          defaultValue: { kind: 'today' },
+          validation: { isRequired: true },
+        }),
+        esconderData: fields.checkbox({
+          label: 'Esconder a data',
+          description: 'FEED + POST · Marcado, a data não aparece no card nem no post.',
+          defaultValue: false,
+        }),
+        esconderAutoria: fields.checkbox({
+          label: 'Esconder quem escreveu',
+          description: 'FEED + POST · Marcado, o "por ..." não aparece no card nem no post. A nota continua aparecendo.',
+          defaultValue: false,
+        }),
+
+        // ───────── Só aparece dentro do post ─────────
+        spoiler: fields.checkbox({
+          label: 'Tem spoiler?',
+          description: 'SÓ NO POST · Marcado, o post mostra um aviso antes da foto e dos blocos.',
+          defaultValue: false,
+        }),
         positivo: fields.array(fields.text({ label: 'Item' }), {
           label: 'Positivo',
-          description: 'O que tem de bom. Um item por linha, curtinho.',
+          description: 'SÓ NO POST · O que tem de bom. Um item por linha, curtinho.',
           itemLabel: (props) => props.value || 'item novo',
         }),
         negativo: fields.array(fields.text({ label: 'Item' }), {
           label: 'Negativo',
-          description: 'O que não rolou. Um item por linha, curtinho.',
+          description: 'SÓ NO POST · O que não rolou. Um item por linha, curtinho.',
           itemLabel: (props) => props.value || 'item novo',
         }),
         ficha: fields.array(
@@ -137,7 +167,7 @@ export default config({
           {
             label: 'Ficha rápida',
             description:
-              'Opcional. Informações curtas. Ideias: série → onde assistir, gênero · restaurante → onde fica, quanto custa, precisa reservar? · produto → onde comprar, preço, compraria de novo? · rolê → onde, quanto, melhor dia.',
+              'SÓ NO POST · Opcional. Informações curtas. Ideias: série → onde assistir, gênero · restaurante → onde fica, quanto custa, precisa reservar? · produto → onde comprar, preço, compraria de novo? · rolê → onde, quanto, melhor dia.',
             itemLabel: (props) => [props.fields.rotulo.value, props.fields.valor.value].filter(Boolean).join(': ') || 'linha nova',
           }
         ),
@@ -148,39 +178,23 @@ export default config({
           }),
           {
             label: 'Galeria',
-            description: 'Opcional. Fotos que aparecem juntas depois do texto. A primeira fica maior.',
+            description: 'SÓ NO POST · Opcional. Fotos que aparecem juntas depois do texto. A primeira fica maior.',
             itemLabel: (props) => props.fields.legenda.value || 'foto',
           }
         ),
         resumindo: fields.text({
           label: 'Resumindo',
-          description: 'Uma frase final. Aparece no quadro do veredito.',
+          description: 'SÓ NO POST · Uma frase final. Aparece no quadro do veredito.',
           multiline: true,
         }),
         tags: fields.array(fields.text({ label: 'Tag' }), {
           label: 'Tags',
-          description: 'Palavrinhas soltas sobre o post, tipo "barato" ou "date".',
+          description: 'SÓ NO POST · Palavrinhas soltas sobre o post, tipo "barato" ou "date".',
           itemLabel: (props) => props.value,
-        }),
-        data: fields.date({
-          label: 'Data',
-          description: 'Já vem com a data de hoje. Mesmo escondida, é ela que define a ordem do feed.',
-          defaultValue: { kind: 'today' },
-          validation: { isRequired: true },
-        }),
-        esconderData: fields.checkbox({
-          label: 'Esconder a data',
-          description: 'Marcado, a data não aparece no card nem no post.',
-          defaultValue: false,
-        }),
-        esconderAutoria: fields.checkbox({
-          label: 'Esconder quem escreveu',
-          description: 'Marcado, o "por ..." não aparece no card nem no post. A nota continua aparecendo.',
-          defaultValue: false,
         }),
         conteudo: fields.markdoc({
           label: 'Texto (opcional)',
-          description: 'Pra quando quiser escrever mais. Dá pra colocar foto no meio pelo botão de imagem da barra.',
+          description: 'SÓ NO POST · Pra quando quiser escrever mais. Dá pra colocar foto no meio pelo botão de imagem da barra.',
           options: {
             image: {
               directory: 'public/images/posts',
