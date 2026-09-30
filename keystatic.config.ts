@@ -234,17 +234,6 @@ export default config({
               label: 'Uma frase que te define',
               description: 'Curtinha, aparece embaixo do nome. Ex.: "a que testa tudo primeiro".',
             }),
-            detalhes: fields.array(
-              fields.object({
-                rotulo: fields.text({ label: 'Nome', description: 'Ex.: Especialidade, Julga sem dó, Não resiste a' }),
-                valor: fields.text({ label: 'Resposta' }),
-              }),
-              {
-                label: 'Mini ficha',
-                description: 'Linhas curtas sobre você, no mesmo estilo da ficha dos posts.',
-                itemLabel: (props) => [props.fields.rotulo.value, props.fields.valor.value].filter(Boolean).join(': ') || 'linha nova',
-              }
-            ),
           }),
           {
             label: 'Quem somos',

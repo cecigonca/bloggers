@@ -6,19 +6,5 @@ texto: |-
 pessoas:
   - nome: Cecília
     frase: a que testa tudo primeiro
-    detalhes:
-      - rotulo: Especialidade
-        valor: comes & bebes
-      - rotulo: Julga sem dó
-        valor: hype de tiktok
-      - rotulo: Não resiste a
-        valor: um lugar novo
   - nome: Katsuki
     frase: a que nunca dá 5 estrelas de primeira
-    detalhes:
-      - rotulo: Especialidade
-        valor: filmes & séries
-      - rotulo: Julga sem dó
-        valor: final mal escrito
-      - rotulo: Não resiste a
-        valor: uma maratona

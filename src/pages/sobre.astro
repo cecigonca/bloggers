@@ -45,16 +45,6 @@ const katsuki = rotulo(autoras, 'amiga');
                   {pessoa.frase && <p class="frase">{pessoa.frase}</p>}
                 </div>
               </div>
-              {pessoa.detalhes.length > 0 && (
-                <dl class="detalhes">
-                  {pessoa.detalhes.map((d) => (
-                    <div class="detalhe">
-                      <dt>{d.rotulo}</dt>
-                      <dd>{d.valor}</dd>
-                    </div>
-                  ))}
-                </dl>
-              )}
             </article>
           ))}
         </div>
@@ -131,13 +121,6 @@ const katsuki = rotulo(autoras, 'amiga');
   .pessoa h3 { font-size: 2rem; font-weight: 800; }
   .frase { margin: 4px 0 0; color: var(--texto-suave); font-size: 1.05rem; }
 
-  .detalhes { margin: 24px 0 0; }
-  .detalhe {
-    display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
-    padding: 12px 0; border-top: 1px solid var(--cinza-claro);
-  }
-  .detalhe dt { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--azul-cinza); }
-  .detalhe dd { margin: 0; font-family: var(--fonte-titulo); font-weight: 700; font-size: 1.1rem; text-align: right; }
 
   /* Régua das notas */
   .regua {
