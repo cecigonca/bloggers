@@ -35,8 +35,9 @@ const posts = defineCollection({
     capa: z.string().nullable().optional(),
     positivo: z.array(z.string()).default([]),
     negativo: z.array(z.string()).default([]),
-    ficha: z.array(z.object({ rotulo: z.string(), valor: z.string() })).default([]),
-    galeria: z.array(z.object({ foto: z.string().nullable(), legenda: z.string().default('') })).default([]),
+    // Campos de dentro de listas podem vir em branco do formulário: nunca podem quebrar o site.
+    ficha: z.array(z.object({ rotulo: z.string().default(''), valor: z.string().default('') })).default([]),
+    galeria: z.array(z.object({ foto: z.string().nullable().optional(), legenda: z.string().default('') })).default([]),
     resumindo: z.string().optional(),
     tags: z.array(z.string()).default([]),
     data: z.coerce.date(),

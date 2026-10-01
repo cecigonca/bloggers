@@ -66,6 +66,7 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
   Divididas: dois selos compactos ("C 3★ · A 4★") no card e no topo; o veredito final vira um placar dividido ao meio + "resumindo".
 - **Fotos no meio do texto:** o "title" da imagem no editor vira legenda (`markdoc.config.mjs` → `src/components/FotoNoTexto.astro`).
 - **Esconder data / quem escreveu:** caixinhas `esconderData` e `esconderAutoria` por post. A data continua obrigatória (ordena o feed).
+- **Campos em branco não podem quebrar o build:** o formulário deixa salvar listas com campos vazios (ex.: ficha só com o nome). O schema usa `.default('')` nesses campos e a página do post limpa itens vazios e "- " no começo. Primeiro post real (buffet da formatura, 01/10/2026) derrubou o deploy por isso.
 - **Voltar pro feed:** volta pra aba de onde a pessoa veio (lê o `document.referrer`).
 - **Post em mais de uma aba:** campo `categoria` (principal, vai na capa do card) + `tambemEm` (lista de outras abas, ex.: `trending`). O card leva todas em `data-categorias`; na página do post viram chips clicáveis.
 - **Hospedagem:** Vercel, projeto `pitacadas` → https://pitacadas.vercel.app. Todo push na `main` publica sozinho; cada branch ganha link de prévia.

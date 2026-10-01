@@ -16,8 +16,18 @@ export async function getStaticPaths() {
 }
 
 const { post, todos } = Astro.props;
-const { titulo, resumo, capa, categoria, tambemEm, spoiler, positivo, negativo, ficha, resumindo, data, tags, esconderData, esconderAutoria } = post.data;
+const { titulo, resumo, capa, categoria, tambemEm, spoiler, resumindo, data, tags, esconderData, esconderAutoria } = post.data;
 const galeria = post.data.galeria.filter((g) => g.foto);
+
+// Limpa o que vem do formulário: tira itens vazios e o "- " ou "• " que às vezes é digitado no começo.
+const limparItem = (texto: string) => texto.trim().replace(/^[-•*]\s*/, '');
+const positivo = post.data.positivo.map(limparItem).filter(Boolean);
+const negativo = post.data.negativo.map(limparItem).filter(Boolean);
+// Linha da ficha com só um dos dois campos preenchidos: mostra o que tiver como informação.
+const ficha = post.data.ficha
+  .map((f) => ({ rotulo: f.rotulo.trim(), valor: f.valor.trim() }))
+  .filter((f) => f.rotulo || f.valor)
+  .map((f) => (f.valor ? f : { rotulo: '', valor: f.rotulo }));
 const opiniao = lerOpiniao(post.data.opiniao);
 const temTexto = Boolean(post.body?.trim());
 const { Content } = await render(post);
@@ -98,7 +108,7 @@ const relacionados = todos
         <section class="ficha" aria-label="Ficha rápida">
           {ficha.map((f) => (
             <div class="ficha-item">
-              <span class="ficha-rotulo">{f.rotulo}</span>
+              {f.rotulo && <span class="ficha-rotulo">{f.rotulo}</span>}
               <span class="ficha-valor">{f.valor}</span>
             </div>
           ))}
