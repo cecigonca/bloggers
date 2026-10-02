@@ -90,18 +90,15 @@ const relacionados = todos
     <div class="coluna secoes">
       {(positivo.length > 0 || negativo.length > 0) && (
         <section class="blocos">
-          {positivo.length > 0 && (
-            <div class="bloco">
-              <h2><span class="marca marca-sim" aria-hidden="true">+</span> Positivo</h2>
-              <ul>{positivo.map((item) => <li>{item}</li>)}</ul>
-            </div>
-          )}
-          {negativo.length > 0 && (
-            <div class="bloco">
-              <h2><span class="marca marca-nao" aria-hidden="true">−</span> Negativo</h2>
-              <ul>{negativo.map((item) => <li>{item}</li>)}</ul>
-            </div>
-          )}
+          {/* Se só um dos dois foi preenchido, o outro aparece com "não tem kkkkkk". */}
+          <div class="bloco">
+            <h2><span class="marca marca-sim" aria-hidden="true">+</span> Positivo</h2>
+            {positivo.length > 0 ? <ul>{positivo.map((item) => <li>{item}</li>)}</ul> : <p class="vazio">não tem kkkkkk</p>}
+          </div>
+          <div class="bloco">
+            <h2><span class="marca marca-nao" aria-hidden="true">−</span> Negativo</h2>
+            {negativo.length > 0 ? <ul>{negativo.map((item) => <li>{item}</li>)}</ul> : <p class="vazio">não tem kkkkkk</p>}
+          </div>
         </section>
       )}
 
@@ -265,6 +262,8 @@ const relacionados = todos
   .marca-nao { background: var(--branco); color: var(--marinho); box-shadow: inset 0 0 0 2px var(--marinho); }
   .bloco ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
   .bloco li { padding-left: 40px; position: relative; line-height: 1.4; }
+  /* Mesmo estilo do "por ... · data" do card: cinza e menor. */
+  .vazio { margin: 0; font-size: 0.85rem; color: var(--cinza); }
   .bloco li::before {
     content: ''; position: absolute; left: 12px; top: 0.55em;
     width: 6px; height: 6px; border-radius: 50%; background: var(--azul-cinza-claro);

@@ -155,12 +155,12 @@ export default config({
         }),
         positivo: fields.array(fields.text({ label: 'Item' }), {
           label: 'Positivo',
-          description: 'SÓ NO POST · O que tem de bom. Um item por linha, curtinho.',
+          description: 'SÓ NO POST · O que tem de bom. Um item por linha, curtinho. Se deixar vazio (e o Negativo tiver itens), aparece "não tem kkkkkk".',
           itemLabel: (props) => props.value || 'item novo',
         }),
         negativo: fields.array(fields.text({ label: 'Item' }), {
           label: 'Negativo',
-          description: 'SÓ NO POST · O que não rolou. Um item por linha, curtinho.',
+          description: 'SÓ NO POST · O que não rolou. Um item por linha, curtinho. Se deixar vazio (e o Positivo tiver itens), aparece "não tem kkkkkk".',
           itemLabel: (props) => props.value || 'item novo',
         }),
         ficha: fields.array(
