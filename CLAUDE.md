@@ -19,6 +19,8 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
   mas com corpo: vários parágrafos desenvolvendo a opinião, e pode ter listas simples ("o que salvou / o que não salvou").
   Referência de tom e de formato: `degustacao-abramovay.mdoc` (primeiro post real, escrito à mão pela Katsuki em 01/10/2026):
   maiúsculas pra ênfase ("SURREAL", "MUITO"), emoji solto, "hihi", lista de highlights, fotos com a avaliação de cada item.
+  **Sempre em primeira pessoa:** o que é das duas em "a gente"; a opinião de cada uma com o nome em negrito na frente ("**Katsuki:** ...") e em "eu".
+  Nada de narrar em terceira pessoa ("a Katsuki achou..."). Opinião por item (ex.: cada wrap) vai com subtítulo `###` e uma linha por pessoa.
   Corrigir só erro de digitação claro; manter o jeito delas de escrever ("macarraozinho", "caipis").
   Usar só o que elas contaram, sem inventar detalhes. Rejeitado: primeira versão do post de Outer Banks (dramática demais).
 - Títulos e cabeçalhos com a primeira letra maiúscula ("É isso mesmo, a gente julga tudo.", "Leia também").
