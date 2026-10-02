@@ -7,5 +7,6 @@ import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   integrations: [react(), markdoc(), keystatic()],
-  adapter: vercel(),
+  // Libera o serviço de fotos da Vercel, que entrega cada foto diminuída (ver src/lib/fotos.ts).
+  adapter: vercel({ imagesConfig: { sizes: [480, 828, 1200, 1920], formats: ['image/avif', 'image/webp'] } }),
 });

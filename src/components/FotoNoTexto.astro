@@ -1,6 +1,8 @@
 ---
 // Foto colocada no meio do texto do post. O "título" da imagem no formulário vira a legenda.
 // Usa <span> (e não <figure>) porque a foto fica dentro de um parágrafo do texto.
+import { foto } from '../lib/fotos';
+
 interface Props {
   src: string;
   alt?: string;
@@ -11,7 +13,7 @@ const { src, alt = '', title } = Astro.props;
 ---
 
 <span class="foto-no-texto">
-  <img src={src} alt={alt} loading="lazy" />
+  <img {...foto(src, '(max-width: 880px) 100vw, 880px')} alt={alt} loading="lazy" />
   {title && <span class="legenda">{title}</span>}
 </span>
 

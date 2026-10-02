@@ -9,6 +9,7 @@ import Logo from '../../components/Logo.astro';
 import { categorias, rotulo, veredito, dataLonga } from '../../lib/rotulos';
 import { lerOpiniao } from '../../lib/opiniao';
 import { corDoCard } from '../../lib/feed';
+import { foto } from '../../lib/fotos';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -84,7 +85,7 @@ const relacionados = todos
       )}
     </header>
 
-    {capa && <div class="coluna"><img src={capa} alt="" class="capa" /></div>}
+    {capa && <div class="coluna"><img {...foto(capa, '(max-width: 880px) 100vw, 880px')} alt="" class="capa" /></div>}
 
     <div class="coluna secoes">
       {(positivo.length > 0 || negativo.length > 0) && (
@@ -123,9 +124,9 @@ const relacionados = todos
 
       {galeria.length > 0 && (
         <section class:list={['galeria', `galeria-${Math.min(galeria.length, 3)}`]} aria-label="Galeria de fotos">
-          {galeria.map((g) => (
+          {galeria.map((g, i) => (
             <figure>
-              <img src={g.foto!} alt={g.legenda} loading="lazy" />
+              <img {...foto(g.foto!, i === 0 ? '(max-width: 700px) 100vw, 600px' : '(max-width: 700px) 50vw, 300px')} alt={g.legenda} loading="lazy" />
               {g.legenda && <figcaption>{g.legenda}</figcaption>}
             </figure>
           ))}
@@ -318,7 +319,8 @@ const relacionados = todos
   .nota-grande span { font-size: 2.6rem; }
   .nota-grande .ouro, .nota-media .ouro { color: var(--dourado); }
   .veredito-nome { font-family: var(--fonte-titulo); font-weight: 800; font-size: 2rem; margin: 0; }
-  .resumindo { margin: 4px 0 0; color: var(--azul-cinza-claro); font-size: 1.05rem; }
+  /* pre-line: respeita as quebras de linha digitadas no formulário. */
+  .resumindo { margin: 4px 0 0; color: var(--azul-cinza-claro); font-size: 1.05rem; white-space: pre-line; }
 
   /* Placar: quando cada uma acha uma coisa, as duas opiniões dividem o mesmo quadro. */
   .placar { display: grid; grid-template-columns: 1fr 1fr; margin-top: 16px; }
@@ -331,7 +333,7 @@ const relacionados = todos
   .nota-media { font-family: var(--fonte-titulo); font-weight: 800; font-size: 3.6rem; line-height: 1; margin: 0; display: flex; align-items: center; gap: 4px; }
   .nota-media span { font-size: 1.8rem; }
   .veredito-nome-menor { font-size: 1.5rem; }
-  .lado-texto { margin: 0; color: var(--azul-cinza-claro); line-height: 1.5; }
+  .lado-texto { margin: 0; color: var(--azul-cinza-claro); line-height: 1.5; white-space: pre-line; }
   .resumindo-final {
     margin-top: 24px; padding-top: 20px;
     border-top: 1px solid rgb(199 208 221 / 0.3);

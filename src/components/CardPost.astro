@@ -6,6 +6,7 @@ import Veredito from './Veredito.astro';
 import { categorias, rotulo, dataCurta } from '../lib/rotulos';
 import { lerOpiniao } from '../lib/opiniao';
 import type { Formato } from '../lib/feed';
+import { foto } from '../lib/fotos';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -26,7 +27,7 @@ const todasCategorias = [categoria, ...tambemEm.filter((c) => c !== categoria)].
 <a href={`/posts/${post.id}`} class="card" data-categorias={todasCategorias} data-formato={formato} data-cor={cor}>
   <div class="capa">
     {capa ? (
-      <img src={capa} alt="" loading="lazy" />
+      <img {...foto(capa, '(max-width: 600px) 100vw, (max-width: 900px) 50vw, 600px')} alt="" loading="lazy" />
     ) : (
       <>
         <span class="digitando" aria-hidden="true"><i></i><i></i><i></i></span>

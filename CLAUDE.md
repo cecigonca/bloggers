@@ -17,7 +17,9 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
   Ela rejeitou: legenda das notas em formato de chat, botão "ver julgamentos", "A gente é chata. Com carinho.".
 - **Ao escrever um post pra elas:** em minúscula como mensagem de chat, sem exagero (nada de "a série favorita da vida"),
   mas com corpo: vários parágrafos desenvolvendo a opinião, e pode ter listas simples ("o que salvou / o que não salvou").
-  Mais longo que o `morando-cravejado.mdoc` (post curtinho da Cecília, bom como referência de tom).
+  Referência de tom e de formato: `degustacao-abramovay.mdoc` (primeiro post real, escrito à mão pela Katsuki em 01/10/2026):
+  maiúsculas pra ênfase ("SURREAL", "MUITO"), emoji solto, "hihi", lista de highlights, fotos com a avaliação de cada item.
+  Corrigir só erro de digitação claro; manter o jeito delas de escrever ("macarraozinho", "caipis").
   Usar só o que elas contaram, sem inventar detalhes. Rejeitado: primeira versão do post de Outer Banks (dramática demais).
 - Títulos e cabeçalhos com a primeira letra maiúscula ("É isso mesmo, a gente julga tudo.", "Leia também").
   Minúscula só em detalhes pequenos (links do menu, nome da categoria na capa do card).
@@ -54,7 +56,9 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
   Estrutura (inspirada no The Infatuation e no Cup of Jo): chamada + uma frase → "Como funciona aqui" (regras curtas, título forte + uma frase, editáveis) → "Quem escreve" (bio curta de cada uma) → "As notas" (régua). Títulos de seção pequenos, em caixa alta, com linha embaixo.
   Rejeitados: mini ficha de "especialidade", "Quem julga", "E de quem é a opinião", texto com expressão pronta ("caiu a ficha", "sem filtro"), frases de efeito sob os nomes.
 - **Katsuki:** o valor interno continua `amiga` (posts e campos `notaAmiga`/`opiniaoAmiga`); na tela aparece "Katsuki" via `src/lib/rotulos.ts`.
-- **Imagens:** `public/images/posts/` e `public/images/sobre/`.
+- **Imagens:** `public/images/posts/` e `public/images/sobre/`. Foto de celular chega a 2–3 MB: no site no ar, a Vercel entrega cada foto diminuída
+  (`src/lib/fotos.ts` + `imagesConfig` em `astro.config.mjs`; as larguras dos dois precisam bater). No computador, aparece a foto original.
+  Toda `<img>` de foto de post usa `foto(src, tamanhos)`. Não usar o `<Image>` do Astro: depende do `sharp`, que o Windows pode bloquear.
 - **Filtro por tópico na home:** feito no navegador (JS em `src/pages/index.astro`) e guardado no link como `?topico=...`.
 - **Estrutura do post** (decidida com as duas via protótipo): tudo numa coluna só de 880px (título, capa, blocos, ficha, texto, galeria, veredito com as mesmas bordas).
   Ordem: voltar pro feed → chips → título → fofoca → quem/nota → aviso de spoiler → capa → blocos **Positivo / Negativo**
