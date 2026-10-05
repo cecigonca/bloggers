@@ -15,7 +15,7 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
   nada de gíria millennial ("grupo do zap" → "wpp"). Menos texto explicando. Escrever como mensagem de verdade
   (ex.: "mano sim... achei horrivel", "SERIO?", "KKKKKKK"). Nada inclinado/torto tipo adesivo.
   Ela rejeitou: legenda das notas em formato de chat, botão "ver julgamentos", "A gente é chata. Com carinho.".
-- **Ao escrever um post pra elas:** em minúscula como mensagem de chat, sem exagero (nada de "a série favorita da vida"),
+- **Ao escrever um post pra elas:** com letra maiúscula no começo das frases e nos nomes, como nos posts da Katsuki (pedido da Cecília em 05/10/2026; antes era tudo minúsculo), sem exagero (nada de "a série favorita da vida"),
   mas com corpo: vários parágrafos desenvolvendo a opinião, e pode ter listas simples ("o que salvou / o que não salvou").
   Referência de tom e de formato: `degustacao-abramovay.mdoc` (primeiro post real, escrito à mão pela Katsuki em 01/10/2026):
   maiúsculas pra ênfase ("SURREAL", "MUITO"), emoji solto, "hihi", lista de highlights, fotos com a avaliação de cada item.
@@ -24,6 +24,7 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
   **Sempre em primeira pessoa:** o que é das duas em "a gente"; a opinião de cada uma com o nome em negrito na frente ("**Katsuki:** ...") e em "eu".
   Nada de narrar em terceira pessoa ("a Katsuki achou..."). Quando as duas concordam, cada item (ex.: cada sabor) vira uma frase só, falando pelas duas, numa lista ("- **Sabor** (tamanho): frase.").
   Nada de uma linha "Katsuki:" e outra "Ceci:" por item (ela odiou). Separar por pessoa (`### Katsuki`, `### Ceci`) só quando elas pedirem, como no Wrappd.
+  Nada de expressão pronta/de redação ("caiu como uma luva", "caiu a ficha"): ela acha estranho.
   Corrigir só erro de digitação claro; manter o jeito delas de escrever ("macarraozinho", "caipis").
   Usar só o que elas contaram, sem inventar detalhes. Rejeitado: primeira versão do post de Outer Banks (dramática demais).
 - Títulos e cabeçalhos com a primeira letra maiúscula ("É isso mesmo, a gente julga tudo.", "Leia também").
