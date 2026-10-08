@@ -1,6 +1,11 @@
 ---
 // Foto colocada no meio do texto do post. O "título" da imagem no formulário vira a legenda.
 // Usa <span> (e não <figure>) porque a foto fica dentro de um parágrafo do texto.
+// A foto nunca aparece maior do que ela é (foto pequena não fica borrada) nem mais alta que 560px
+// (foto em pé não toma a tela). Pra isso, lê o tamanho real do arquivo em public/.
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { imageMetadata } from 'astro/assets/utils';
 import { foto } from '../lib/fotos';
 
 interface Props {
@@ -10,15 +15,35 @@ interface Props {
 }
 
 const { src, alt = '', title } = Astro.props;
+
+const ALTURA_MAXIMA = 560;
+let tamanho: { width: number; height: number } | undefined;
+if (src.startsWith('/')) {
+  try {
+    const { width, height } = await imageMetadata(await readFile(join(process.cwd(), 'public', src)), src);
+    const escala = Math.min(1, ALTURA_MAXIMA / height);
+    tamanho = { width: Math.round(width * escala), height: Math.round(height * escala) };
+  } catch {
+    // Sem conseguir ler o tamanho, a foto ocupa a largura do texto, como antes.
+  }
+}
 ---
 
 <span class="foto-no-texto">
-  <img {...foto(src, '(max-width: 880px) 100vw, 880px')} alt={alt} loading="lazy" />
+  <img
+    {...foto(src, tamanho ? `(max-width: 880px) min(100vw, ${tamanho.width}px), ${tamanho.width}px` : '(max-width: 880px) 100vw, 880px')}
+    width={tamanho?.width}
+    height={tamanho?.height}
+    class:list={[{ 'largura-total': !tamanho }]}
+    alt={alt}
+    loading="lazy"
+  />
   {title && <span class="legenda">{title}</span>}
 </span>
 
 <style>
   .foto-no-texto { display: block; margin: 28px 0; }
-  img { display: block; width: 100%; border-radius: 14px; }
+  img { display: block; max-width: 100%; height: auto; border-radius: 14px; }
+  .largura-total { width: 100%; }
   .legenda { display: block; margin-top: 8px; font-size: 0.9rem; line-height: 1.4; color: var(--cinza); }
 </style>
