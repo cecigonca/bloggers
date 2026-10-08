@@ -297,6 +297,15 @@ const relacionados = todos
   }
   .prosa :global(blockquote p) { margin: 0; }
   .prosa :global(hr) { border: 0; border-top: 1.5px dashed var(--azul-cinza-claro); margin: 40px 0; }
+  /* Duas ou mais fotos coladas na mesma linha do texto viram uma dupla padronizada:
+     colunas iguais, fotos cortadas no mesmo formato (4:5), cada uma com a sua legenda. */
+  .prosa :global(p:has(> .foto-no-texto ~ .foto-no-texto)) {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 12px; max-width: 480px; margin: 28px 0;
+  }
+  .prosa :global(p:has(> .foto-no-texto ~ .foto-no-texto) .foto-no-texto) { margin: 0; }
+  .prosa :global(p:has(> .foto-no-texto ~ .foto-no-texto) .foto-no-texto img) {
+    width: 100%; max-width: none; height: auto; aspect-ratio: 4 / 5; object-fit: cover;
+  }
 
   /* Galeria: a primeira foto maior. */
   .galeria { display: grid; gap: 12px; }
