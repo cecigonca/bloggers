@@ -79,6 +79,8 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
   ou `divididas` com `notaCecilia`, `opiniaoCecilia`, `notaAmiga`, `opiniaoAmiga`. Lido por `src/lib/opiniao.ts`.
   Divididas: dois selos compactos ("C 3★ · A 4★") no card e no topo; o veredito final vira um placar dividido ao meio + "resumindo".
 - **Fotos no meio do texto:** o "title" da imagem no editor vira legenda (`markdoc.config.mjs` → `src/components/FotoNoTexto.astro`).
+  A foto aparece no tamanho real (no máximo 560px de altura; o componente lê o tamanho do arquivo em `public/`), nunca esticada.
+  Duas fotos na MESMA linha do texto (`![A](...) ![B](...)`) viram uma dupla lado a lado, do mesmo tamanho (4:5, até 480px no total) — CSS em `src/pages/posts/[slug].astro`. A Cecília odiou fotos de tamanhos diferentes uma embaixo da outra (Z Deli, 08/10/2026).
 - **Esconder data / quem escreveu:** caixinhas `esconderData` e `esconderAutoria` por post. A data continua obrigatória (ordena o feed).
 - **Campos em branco não podem quebrar o build:** o formulário deixa salvar listas com campos vazios (ex.: ficha só com o nome). O schema usa `.default('')` nesses campos e a página do post limpa itens vazios e "- " no começo. Primeiro post real (buffet da formatura, 01/10/2026) derrubou o deploy por isso.
 - **Voltar pro feed:** volta pra aba de onde a pessoa veio (lê o `document.referrer`).
