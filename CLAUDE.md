@@ -25,6 +25,8 @@ O trabalho está na branch `v0` (a `main` ainda só tem o README original).
   ("a gente" quando concordam; "eu" quando o post é de uma só, citando a outra no meio, como em `festa-fomo.mdoc`), dividido em subtítulos
   por assunto (`### O que esperar`, `### O melhor dia`, `### A dica`, `### O lado ruim`), NÃO por pessoa. Bloco `### Katsuki` / `### Ceci`
   só quando as opiniões forem opostas (ex.: `matcha.mdoc`, com placar dividido).
+  Post curto e pessoal (nostalgia, desabafo) vai como história corrida SEM subtítulos, igual ao `sushi-vaz.mdoc` (ex.: `bubblekill.mdoc`).
+  Ficha só com informação geral (o que é, onde, preço); detalhe pessoal (ex.: "meus combos") vai no texto, não na ficha.
   **Sempre em primeira pessoa:** o que é das duas em "a gente"; a opinião de cada uma com o nome em negrito na frente ("**Katsuki:** ...") e em "eu".
   Nada de narrar em terceira pessoa ("a Katsuki achou..."). Quando as duas concordam, cada item (ex.: cada sabor) vira uma frase só, falando pelas duas, numa lista ("- **Sabor** (tamanho): frase.").
   Nada de uma linha "Katsuki:" e outra "Ceci:" por item (ela odiou). Separar por pessoa (`### Katsuki`, `### Ceci`) só quando elas pedirem, como no Wrappd.
